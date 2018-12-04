@@ -1,0 +1,248 @@
+2017-03-23 17:21:06 DEBUG - Saving config.properties information in memory
+2017-03-23 17:21:06 DEBUG - Note - When updating config.properties file, remember to restart the server
+2017-03-23 17:21:06 DEBUG - Port number was set to 8059
+IP Address: 10.236.217.167
+Hostname: M5-D-501STB9
+2017-03-23 17:21:07 INFO  - Setting Number of Threads to 1000
+2017-03-23 17:21:07 DEBUG - Set Number of Threads to 1000
+2017-03-23 17:21:07 DEBUG - Creating server to port 8059
+2017-03-23 17:21:07 DEBUG - Press Enter on command line to stop the server.
+2017-03-23 17:21:12 DEBUG - Writing XML request on server, please look for the request file at .\request\_REQ_Thu23Mar2017172112194.xml
+2017-03-23 17:21:12 DEBUG - Reading XML Values from file
+setting request namespace prefix to ser:
+2017-03-23 17:21:12 DEBUG - Request namespace prefix was set to ser:
+2017-03-23 17:21:12 DEBUG - Target EUI AD-BA-17-03-10-11-09-30
+2017-03-23 17:21:12 DEBUG - User request file name is ./Users/AD/request/7.9_REQ_Thu23Mar2017172112674.xml
+2017-03-23 17:21:12 DEBUG - Writing XML request in AD's profile, please look for the request file at .\Users\AD\request\7.9_REQ_Thu23Mar2017172112674.xml
+2017-03-23 17:21:13 DEBUG - file:/C:/Users/smit.j.mirani/Desktop/Smit%20Stuff/STUB/stubService/stubService-performance_load_balancer_v2_refactored/./request/_REQ_Thu23Mar2017172112194.xml passed XSD validation
+2017-03-23 17:21:13 DEBUG - Creating Message Acknowledgement (ack)
+ADD0
+2017-03-23 17:21:13 DEBUG - Generating XML response messages
+2017-03-23 17:21:13 DEBUG - reading ADs response_code.properties file
+2017-03-23 17:21:13 DEBUG - User ACK file name is ./Users/AD/response/7.9_ACK_Thu23Mar2017172113463.xml
+2017-03-23 17:21:13 DEBUG - Writing XML response to response folder, Please view file ./Users/AD/response/7.9_ACK_Thu23Mar2017172113463.xml
+2017-03-23 17:21:13 DEBUG - Sending response to system creating the request...
+/mockServer
+Completed and closed the connection
+2017-03-23 17:21:13 DEBUG - Sent a response to the systen
+2017-03-23 17:21:13 DEBUG - Sending  alert before
+2017-03-23 17:21:13 DEBUG - Pausing the Alert Before for 4 seconds
+2017-03-23 17:21:17 DEBUG - Generating Alert messages
+2017-03-23 17:21:17 DEBUG - Entering AD's user account, and reading the file 7.9_alertbefore.txt
+2017-03-23 17:21:17 DEBUG - Reading from ./Users/AD/7.9_alertbefore.txt
+2017-03-23 17:21:17 DEBUG -  
+2017-03-23 17:21:17 DEBUG - Custom XML has been set to <testing>7.9_AlertBefore </testing>
+
+2017-03-23 17:21:17 DEBUG - Alert Generated before response message
+2017-03-23 17:21:17 DEBUG - The alert before file name is ./Users/AD/alert/7.9_ALERTBEFORE_Thu23Mar2017172117646.xml
+2017-03-23 17:21:17 DEBUG - Writing XML response to response folder, Please view file ./Users/AD/alert/7.9_ALERTBEFORE_Thu23Mar2017172117646.xml
+2017-03-23 17:21:17 DEBUG - Sending message to the url: http://plylmdmappt01:8096/DCCWSInboundCGIAdapter/ResponseAndAlert
+2017-03-23 17:21:17 DEBUG - Established a URL Connection
+java.net.UnknownHostException: plylmdmappt01
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(Unknown Source)
+	at model.HTTPRequestHandler.sendPost(HTTPRequestHandler.java:85)
+	at runme.WebServer$DCCHandler.handle(WebServer.java:204)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.AuthFilter.doFilter(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2017-03-23 17:21:18 DEBUG - plylmdmappt01
+java.net.UnknownHostException: plylmdmappt01
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(Unknown Source)
+	at model.HTTPRequestHandler.sendPost(HTTPRequestHandler.java:85)
+	at runme.WebServer$DCCHandler.handle(WebServer.java:204)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.AuthFilter.doFilter(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2017-03-23 17:21:18 DEBUG - entering asynchronous workflow
+2017-03-23 17:21:18 DEBUG - Pausing the asynchronous workflow for 10 seconds
+2017-03-23 17:21:28 DEBUG - Generating XML response messages
+ADD0
+2017-03-23 17:21:28 DEBUG - reading ADs response_code.properties file
+7.9
+2017-03-23 17:21:28 DEBUG - SRV number is:7.9
+2017-03-23 17:21:28 DEBUG - Starting Async workflow
+2017-03-23 17:21:28 DEBUG - Entering AD's user account, and reading the file 7.9_Async.txt
+2017-03-23 17:21:28 DEBUG - Reading from ./Users/AD/7.9_Async.txt
+2017-03-23 17:21:28 DEBUG -  
+2017-03-23 17:21:28 DEBUG - Custom XML has been set to <testing>7.9_Async </testing>
+
+2017-03-23 17:21:28 DEBUG - Asynchronous Response message
+2017-03-23 17:21:28 DEBUG - User response file name is ./Users/AD/response/7.9_RESP_Thu23Mar2017172128158.xml
+2017-03-23 17:21:28 DEBUG - Writing XML response to response folder, Please view file ./Users/AD/response/7.9_RESP_Thu23Mar2017172128158.xml
+2017-03-23 17:21:28 DEBUG - Sending message to the url: http://plylmdmappt01:8096/DCCWSInboundCGIAdapter/ResponseAndAlert
+2017-03-23 17:21:28 DEBUG - Established a URL Connection
+2017-03-23 17:21:28 DEBUG - plylmdmappt01
+java.net.UnknownHostException: plylmdmappt01
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(Unknown Source)
+	at model.HTTPRequestHandler.sendPost(HTTPRequestHandler.java:85)
+	at runme.WebServer$DCCHandler.handle(WebServer.java:229)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.AuthFilter.doFilter(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+java.net.UnknownHostException: plylmdmappt01
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(Unknown Source)
+	at model.HTTPRequestHandler.sendPost(HTTPRequestHandler.java:85)
+	at runme.WebServer$DCCHandler.handle(WebServer.java:229)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.AuthFilter.doFilter(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2017-03-23 17:21:28 DEBUG - Sending alert after
+2017-03-23 17:21:28 DEBUG - Pausing the Alert After for 6 seconds
+2017-03-23 17:21:34 DEBUG - Generating Alert messages
+2017-03-23 17:21:34 DEBUG - Entering AD's user account, and reading the file 7.9_alertafter.txt
+2017-03-23 17:21:34 DEBUG - Reading from ./Users/AD/7.9_alertafter.txt
+2017-03-23 17:21:34 DEBUG -  
+2017-03-23 17:21:34 DEBUG - Custom XML has been set to <testing>7.9_AlertAfter </testing>
+
+2017-03-23 17:21:34 DEBUG - Alert Generated after response message
+2017-03-23 17:21:34 DEBUG - The alert after file name is ./Users/AD/alert/7.9_ALERTAFTER_Thu23Mar2017172134190.xml
+2017-03-23 17:21:34 DEBUG - Writing XML response to response folder, Please view file ./Users/AD/alert/7.9_ALERTAFTER_Thu23Mar2017172134190.xml
+2017-03-23 17:21:34 DEBUG - Sending message to the url: http://plylmdmappt01:8096/DCCWSInboundCGIAdapter/ResponseAndAlert
+2017-03-23 17:21:34 DEBUG - Established a URL Connection
+java.net.UnknownHostException: plylmdmappt01
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(Unknown Source)
+	at model.HTTPRequestHandler.sendPost(HTTPRequestHandler.java:85)
+	at runme.WebServer$DCCHandler.handle(WebServer.java:258)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.AuthFilter.doFilter(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2017-03-23 17:21:34 DEBUG - plylmdmappt01
+java.net.UnknownHostException: plylmdmappt01
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(Unknown Source)
+	at model.HTTPRequestHandler.sendPost(HTTPRequestHandler.java:85)
+	at runme.WebServer$DCCHandler.handle(WebServer.java:258)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.AuthFilter.doFilter(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(Unknown Source)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Unknown Source)
+	at sun.net.httpserver.ServerImpl$Exchange.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)

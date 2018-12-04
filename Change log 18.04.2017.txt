@@ -1,0 +1,65 @@
+ * 
+ * @author Shah Murad Hussain
+ * @version 0.100
+ * @since 09.09.2016
+ * Accenture
+ * 
+ * MAIN METHOD FOR HOSTING THE STUB, HANDLES ALL WORKFLOWS WITHIN  THE CLASS
+ * TEST CLASS IS ALSO AVAILABLE FOR SEEING IF STUB SERVICE IS AVAILABLE (TestWebServiceHandler)
+ * 
+ * @author Smit J Mirani
+ * @version 106.1
+ * @since 06.04.2017
+ * Alerts can be now dynamically generated.
+ * Configurable delay between alerts and responses.
+ * Separate methods for alerts generation.
+ * Proper renaming of response files.
+ * originator and target IDs in response files are now proper.
+ * More refined logging.
+ * 
+ * @author Smit J Mirani
+ * @version 106.2
+ * @since 07.04.2017
+ * Changes in alerts name space. Additional URLs added.
+ * Alerts, request and response files for 8.2 DUIS will be stored in the Users/DCCONLY/8.2/MPXN/(POD number) folder.
+ * 
+ * @author Smit J Mirani
+ * @version 106.3
+ * @since 12.04.2017
+ * Exception for 11.1 alert -> Added Deviceidlist in TargEUI
+ * 
+ * @author Smit J Mirani
+ * @version 107
+ * @since 14.04.2017
+ * DCC Only alerts and normal alerts differentiation. They will be generated differently.
+ * 
+ * @author Smit J Mirani
+ * @version 107.1
+ * @since 18.04.2017
+ * Exception in response for 6.15.1 where originator and response IDs are not swapped. 
+ *
+ * @author Smit J Mirani
+ * @version 107.2
+ * @since 18.04.2017
+ * Exception in response for 6.23, 6.21 where originator and response IDs are not swapped
+ *
+ * @author Smit J Mirani
+ * @version 107.11
+ * @since 18.04.2017
+ * Exception in response for 6.15.1 where originator and response IDs are not swapped only in the body
+ *
+ * @author Smit J Mirani
+ * @version 108
+ * @since 05.05.2017
+ * Give user the choice if the alert is dcc alert or user alert. Added variables in config.properties 
+ * srv_IsAlertBeforeDeviceAlert , srv_IsAlertAfterDeviceAlert
+ *
+ * @author Smit J Mirani
+ * @version 108.1
+ * @since 18.08.2017
+ * changes in timestamp dd-mm-yyyy hh24:mi:ss.00Z
+ 
+ 
+ 
+ 
+ 

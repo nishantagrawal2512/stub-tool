@@ -1,0 +1,2971 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by Chris Dann (Logica CMG UK Ltd) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sr="http://www.cgi.com/DccAdapter/core/ServiceRequest" targetNamespace="http://www.cgi.com/DccAdapter/core/ServiceRequest" elementFormDefault="qualified">
+	<!--
+      DCC Adapter Request XSD
+      Version: 06 V1.0 - 20160113
+      Aligned with:
+            Filename - DUIS Schema Final 0.8.2.xsd
+            GBCS Version - 0.8.2
+            Date - 18th November 2015
+     -->
+	<xs:simpleType name="CertificationRequest">
+		<xs:restriction base="xs:base64Binary"/>
+	</xs:simpleType>
+	<!-- Common Types -->
+	<xs:simpleType name="range_1_3">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="range_1_4">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="range_1_5">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="range_1_7">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="7"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="range_1_8">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="range_1_20">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="range_1_48">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="48"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FirmwareVersion">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="8"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- maximum floor number in security use cases -->
+	<xs:simpleType name="floorSequenceNumber">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="9223372036854775807"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- maximum number of schedule IDs for a device -->
+	<xs:simpleType name="scheduleID">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="1000000000000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- maximum days when offsetting a command -->
+	<xs:simpleType name="logPeriodOffset">
+		<xs:restriction base="xs:nonPositiveInteger">
+			<xs:minInclusive value="-400"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- tolerance period for setting clock in seconds, set as 1 day -->
+	<xs:simpleType name="tolerancePeriod">
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="86400"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="FutureDatedAbstractType" abstract="true">
+		<xs:sequence>
+			<xs:element name="ExecutionDateTime" type="xs:dateTime" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="GasThresholdType">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:maxInclusive value="281474976710656"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PriceScale">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-128"/>
+			<xs:maxInclusive value="127"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PriceType">
+		<xs:restriction base="xs:short"/>
+	</xs:simpleType>
+	<xs:complexType name="MandatoryFutureDatedAbstractType" abstract="true">
+		<xs:sequence>
+			<xs:element name="ExecutionDateTime" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- tariff definitions -->
+	<!-- Seasons -->
+	<xs:complexType name="ElecSeasonsPrimary">
+		<xs:sequence>
+			<xs:element name="Season" type="sr:ElecSeasonPrimary" maxOccurs="4"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecSeasonsSecondary">
+		<xs:sequence>
+			<xs:element name="Season" type="sr:ElecSeasonSecondary" maxOccurs="4"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasSeasons">
+		<xs:sequence>
+			<xs:element name="Season" type="sr:GasSeason" maxOccurs="3"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasSeasonsNonDisablement">
+		<xs:sequence>
+			<xs:element name="Season" type="sr:GasSeasonNonDisablement" maxOccurs="3"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Switches -->
+	<xs:complexType name="ElecSwitchingTablePrimary">
+		<xs:sequence>
+			<xs:element name="DayProfiles" type="sr:ElecDayProfiles"/>
+			<xs:element name="WeekProfiles" type="sr:ElecWeekProfiles"/>
+			<xs:element name="Seasons" type="sr:ElecSeasonsPrimary"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecSwitchingTableSecondary">
+		<xs:sequence>
+			<xs:element name="DayProfiles" type="sr:ElecDayProfilesSecondary"/>
+			<xs:element name="WeekProfiles" type="sr:ElecWeekProfiles"/>
+			<xs:element name="Seasons" type="sr:ElecSeasonsSecondary"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasSwitchingTable">
+		<xs:sequence>
+			<xs:element name="DayProfiles" type="sr:GasDayProfiles"/>
+			<xs:element name="WeekProfiles" type="sr:GasWeekProfiles"/>
+			<xs:element name="Seasons" type="sr:GasSeasons"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Season -->
+	<xs:complexType name="ElecSeasonPrimary">
+		<xs:sequence>
+			<xs:element name="SeasonName">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="8"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SeasonStartDate" type="sr:Date"/>
+			<xs:element name="ReferencedWeekName" type="sr:ElecWeekName"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecSeasonSecondary">
+		<xs:sequence>
+			<xs:element name="SeasonName">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="8"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SeasonStartDate" type="sr:Date"/>
+			<xs:element name="ReferencedWeekName" type="sr:ElecWeekName"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasSeason">
+		<xs:sequence>
+			<xs:element name="SeasonStartDate" type="sr:GasDateWithWildcards"/>
+			<xs:element name="ReferencedWeekName" type="sr:GasWeekName"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasSeasonNonDisablement">
+		<xs:sequence>
+			<xs:element name="SeasonStartDate" type="sr:GasDateWithWildcards"/>
+			<xs:element name="ReferencedWeekName" type="sr:GasWeekNameNonDisablement"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Week Profiles -->
+	<xs:complexType name="ElecWeekProfiles">
+		<xs:sequence>
+			<xs:element name="WeekProfile" type="sr:ElecWeekProfile" maxOccurs="4"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasWeekProfiles">
+		<xs:sequence>
+			<xs:element name="WeekProfile" type="sr:WeekProfileGas" maxOccurs="2"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasWeekProfilesNonDisablement">
+		<xs:sequence>
+			<xs:element name="WeekProfile" type="sr:WeekProfileGasNonDisablement" maxOccurs="2"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Week Profile -->
+	<xs:complexType name="ElecWeekProfile">
+		<xs:sequence>
+			<xs:element name="WeekName" type="sr:ElecWeekName"/>
+			<xs:element name="ReferencedDayName" type="sr:ElecReferencedDayName" minOccurs="7" maxOccurs="7"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WeekProfileGas">
+		<xs:sequence>
+			<xs:element name="WeekName" type="sr:GasWeekName"/>
+			<xs:element name="ReferencedDayName" type="sr:GasReferencedDayName" minOccurs="7" maxOccurs="7"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WeekProfileGasNonDisablement">
+		<xs:sequence>
+			<xs:element name="WeekName" type="sr:GasWeekName"/>
+			<xs:element name="ReferencedDayName" type="sr:GasReferencedDayNameNonDisablement" minOccurs="7" maxOccurs="7"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Day Profiles -->
+	<xs:complexType name="ElecDayProfiles">
+		<xs:sequence>
+			<xs:element name="DayProfile" type="sr:ElecDayProfilePrimary" maxOccurs="16"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecDayProfilesSecondary">
+		<xs:sequence>
+			<xs:element name="DayProfile" type="sr:ElecDayProfileSecondary" maxOccurs="16"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasDayProfiles">
+		<xs:sequence>
+			<xs:element name="DayProfile" type="sr:GasDayProfile" maxOccurs="4"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Day Profile -->
+	<xs:complexType name="ElecDayProfilePrimary">
+		<xs:sequence>
+			<xs:element name="DayName" type="sr:ElecDayName"/>
+			<xs:element name="ProfileSchedule" type="sr:ElecProfileSchedulePrimary" maxOccurs="48"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecProfileSchedulePrimary">
+		<xs:sequence>
+			<xs:element name="StartTime" type="xs:time"/>
+			<xs:choice>
+				<xs:element name="TOUTariffAction">
+					<xs:simpleType>
+						<xs:restriction base="xs:positiveInteger">
+							<xs:minInclusive value="1"/>
+							<xs:maxInclusive value="48"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BlockTariffAction">
+					<xs:simpleType>
+						<xs:restriction base="xs:positiveInteger">
+							<xs:minInclusive value="1"/>
+							<xs:maxInclusive value="8"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecDayProfileSecondary">
+		<xs:sequence>
+			<xs:element name="DayName" type="sr:ElecDayName"/>
+			<xs:element name="ProfileSchedule" type="sr:ElecProfileScheduleSecondary" maxOccurs="48"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecProfileScheduleSecondary">
+		<xs:sequence>
+			<xs:element name="StartTime" type="xs:time"/>
+			<xs:element name="TOUTariffAction">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasDayProfile">
+		<xs:sequence>
+			<xs:element name="DayName" type="sr:GasDayName"/>
+			<xs:choice>
+				<xs:element name="TOUTariffAction">
+					<xs:simpleType>
+						<xs:restriction base="xs:positiveInteger">
+							<xs:minInclusive value="1"/>
+							<xs:maxInclusive value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BlockTariff" type="sr:NoType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Special Days -->
+	<xs:complexType name="ElecSpecialDaysPrimary">
+		<xs:sequence>
+			<xs:element name="SpecialDay" type="sr:ElecSpecialDayPrimary" minOccurs="0" maxOccurs="50"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecSpecialDayPrimary">
+		<xs:sequence>
+			<xs:element name="Date" type="sr:Date"/>
+			<xs:element name="ReferencedDayName" type="sr:ElecDayName"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecSpecialDaysSecondary">
+		<xs:sequence>
+			<xs:element name="SpecialDay" type="sr:ElecSpecialDaySecondary" minOccurs="0" maxOccurs="50"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecSpecialDaySecondary">
+		<xs:sequence>
+			<xs:element name="Date" type="sr:Date"/>
+			<xs:element name="ReferencedDayName" type="sr:ElecDayName"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasSpecialDays">
+		<xs:sequence>
+			<xs:element name="SpecialDay" type="sr:GasSpecialDay" minOccurs="0" maxOccurs="20"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasSpecialDaysNonDisablement">
+		<xs:sequence>
+			<xs:element name="SpecialDay" type="sr:GasSpecialDayNonDisablement" minOccurs="0" maxOccurs="20"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasSpecialDay">
+		<xs:sequence>
+			<xs:element name="Date" type="sr:GasDateWithWildcards"/>
+			<xs:element name="ReferencedDayName" type="sr:GasDayName"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasSpecialDayNonDisablement">
+		<xs:sequence>
+			<xs:element name="Date" type="sr:GasDateWithWildcards"/>
+			<xs:element name="ReferencedDayName" type="sr:GasDayNameNonDisablement"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- thresholds -->
+	<xs:complexType name="ElecThresholdMatrix">
+		<xs:sequence>
+			<xs:element name="Thresholds" type="sr:ElecThresholds" minOccurs="8" maxOccurs="8"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasThresholdMatrix">
+		<xs:sequence>
+			<xs:element name="BlockThreshold" type="sr:GasThreshold" maxOccurs="3"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasThreshold">
+		<xs:simpleContent>
+			<xs:extension base="sr:GasThresholdType">
+				<xs:attribute name="index" type="sr:range_1_3" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="ElecThresholds">
+		<xs:sequence>
+			<xs:element name="BlockThreshold" maxOccurs="3">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:unsignedInt">
+							<xs:attribute name="index" type="sr:range_1_3" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="index" type="sr:range_1_8" use="required"/>
+	</xs:complexType>
+	<!-- top level tariff -->
+	<xs:complexType name="ElecTariffElements">
+		<xs:sequence>
+			<xs:element name="CurrencyUnits">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="GBP"/>
+						<xs:enumeration value="ECB"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SwitchingTable" type="sr:ElecSwitchingTablePrimary"/>
+			<xs:element name="SpecialDays" type="sr:ElecSpecialDaysPrimary"/>
+			<xs:element name="ThresholdMatrix" type="sr:ElecThresholdMatrix"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasTariffElements">
+		<xs:sequence>
+			<xs:element name="SwitchingTable" type="sr:GasSwitchingTable"/>
+			<xs:element name="SpecialDays" type="sr:GasSpecialDays"/>
+			<xs:element name="ThresholdMatrix" type="sr:GasThresholdMatrix"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- simple types days -->
+	<xs:simpleType name="ElecDayName">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GasDayNameNonDisablement">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GasDayName">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ElecReferencedDayName">
+		<xs:simpleContent>
+			<xs:extension base="sr:ElecDayName">
+				<xs:attribute name="index" type="sr:range_1_7" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="GasReferencedDayNameNonDisablement">
+		<xs:simpleContent>
+			<xs:extension base="sr:GasDayNameNonDisablement">
+				<xs:attribute name="index" type="sr:range_1_7" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="GasReferencedDayName">
+		<xs:simpleContent>
+			<xs:extension base="sr:GasDayName">
+				<xs:attribute name="index" type="sr:range_1_7" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- simple types weeks -->
+	<xs:simpleType name="ElecWeekName">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GasWeekName">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GasWeekNameNonDisablement">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Blocks -->
+	<xs:complexType name="ElecBlocks">
+		<xs:sequence>
+			<xs:element name="BlockPrice" type="sr:ElecBlockPrice" maxOccurs="4"/>
+		</xs:sequence>
+		<xs:attribute name="index" type="sr:range_1_8" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ElecBlockPrice">
+		<xs:simpleContent>
+			<xs:extension base="sr:PriceType">
+				<xs:attribute name="index" type="sr:range_1_4" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="GasBlockPrice">
+		<xs:simpleContent>
+			<xs:extension base="xs:unsignedInt">
+				<xs:attribute name="index" type="sr:range_1_4" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- TOUs -->
+	<xs:complexType name="ElecPrimaryTOUPrice">
+		<xs:simpleContent>
+			<xs:extension base="sr:PriceType">
+				<xs:attribute name="index" type="sr:range_1_48" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="ElecSecondaryTOUPrice">
+		<xs:simpleContent>
+			<xs:extension base="sr:PriceType">
+				<xs:attribute name="index" type="sr:range_1_4" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="GasTOUPrice">
+		<xs:simpleContent>
+			<xs:extension base="xs:unsignedInt">
+				<xs:attribute name="index" type="sr:range_1_4" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- top level prices -->
+	<xs:complexType name="PricePrimary">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="ElectricityPriceElements" type="sr:ElecPriceElementsPrimary"/>
+				<xs:element name="GasPriceElements" type="sr:GasPriceElements"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PriceSecondary">
+		<xs:sequence>
+			<xs:element name="PriceScale" type="sr:PriceScale"/>
+			<xs:element name="ElectricityPriceElement" type="sr:ElecSecondaryTOUPrice" maxOccurs="4"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasPriceElements">
+		<xs:sequence>
+			<xs:element name="CurrencyUnits">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="GBP"/>
+						<xs:enumeration value="ECB"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StandingCharge" type="xs:unsignedInt"/>
+			<xs:choice>
+				<xs:element name="BlockTariff" type="sr:GasBlockPriceMatrix"/>
+				<xs:element name="TOUTariff" type="sr:GasTOUPriceMatrix"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasBlockPriceMatrix">
+		<xs:sequence>
+			<xs:element name="BlockPrice" type="sr:GasBlockPrice" maxOccurs="4"/>
+			<xs:element name="NumberOfThresholds">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasTOUPriceMatrix">
+		<xs:sequence>
+			<xs:element name="TOUPrice" type="sr:GasTOUPrice" maxOccurs="4"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecPriceElementsPrimary">
+		<xs:sequence>
+			<xs:element name="StandingCharge" type="sr:PriceType"/>
+			<xs:element name="StandingChargeScale" type="sr:PriceScale"/>
+			<xs:element name="PriceScale" type="sr:PriceScale"/>
+			<xs:choice>
+				<xs:element name="BlockTariff" type="sr:ElecBlockTariff"/>
+				<xs:element name="TOUTariff" type="sr:ElecTOUTariff"/>
+				<xs:element name="HybridTariff" type="sr:ElecHybridTariff"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecBlockTariff">
+		<xs:sequence>
+			<xs:element name="BlockPrices" type="sr:ElecBlocks" maxOccurs="8"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecTOUTariff">
+		<xs:sequence>
+			<xs:element name="TOUPrice" type="sr:ElecPrimaryTOUPrice" maxOccurs="48"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecHybridTariff">
+		<xs:sequence>
+			<xs:element name="BlockPrices" type="sr:ElecBlocks" maxOccurs="8"/>
+			<xs:element name="TOUPrice" type="sr:ElecPrimaryTOUPrice" maxOccurs="48"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TariffPrimaryElement">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:choice>
+						<xs:element name="ElecTariffElements" type="sr:ElecTariffElements"/>
+						<xs:element name="GasTariffElements" type="sr:GasTariffElements"/>
+					</xs:choice>
+					<xs:element name="PriceElements" type="sr:PricePrimary"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TariffSecondaryElement">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="SwitchingTable" type="sr:ElecSwitchingTableSecondary"/>
+					<xs:element name="SpecialDays" type="sr:ElecSpecialDaysSecondary"/>
+					<xs:element name="PriceElements" type="sr:PriceSecondary"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UpdatePricePrimaryElement">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="PriceElements" type="sr:PricePrimary"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UpdatePriceSecondaryElement">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="PriceElements" type="sr:PriceSecondary"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="RequestIDType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}:[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}:[0-9]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EUI">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="RequestID" type="sr:RequestIDType"/>
+	<xs:simpleType name="StringRequestIDType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}:[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}:[0-9]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="DccaCoreRequestIDType">
+		<xs:sequence>
+			<xs:element name="OriginatorEui" type="sr:EUI"/>
+			<xs:element name="TargetEui" type="sr:EUI"/>
+			<xs:element name="OriginatorCounter" type="xs:positiveInteger" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="KeyInfo">
+		<xs:choice>
+			<xs:element name="PreviousKey" type="sr:NoType"/>
+			<xs:element name="InstallKey" type="xs:string"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="Sequencing">
+		<xs:choice>
+			<xs:element name="FirstInSequence" type="xs:boolean"/>
+			<xs:element name="PrecedingServiceRequestID" type="sr:StringRequestIDType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ReadLogPeriodAbstractType" abstract="true">
+		<xs:sequence>
+			<xs:element name="ReadLogPeriod" type="sr:ReadLogPeriod"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReadLogPeriodFDAbstractType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="ReadLogPeriod" type="sr:ReadLogPeriod"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReadLogPeriod">
+		<xs:sequence>
+			<xs:element name="StartDateTime" type="xs:dateTime"/>
+			<xs:element name="EndDateTime" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReadDataOnDemand"/>
+	<xs:complexType name="NoType"/>
+	<xs:complexType name="ReadDataOnDemandOrFutureDated">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReadLogOnDemand">
+		<xs:complexContent>
+			<xs:extension base="sr:ReadLogPeriodAbstractType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReadLogFutureDatable">
+		<xs:complexContent>
+			<xs:extension base="sr:ReadLogPeriodFDAbstractType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReadLogFutureDatableAndURPCredentials">
+		<xs:complexContent>
+			<xs:extension base="sr:ReadLogPeriodFDAbstractType">
+				<xs:sequence minOccurs="0">
+					<xs:element name="KAPublicSecurityCredentials" type="sr:Certificate"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReadLogFutureDatableAndURPFlag">
+		<xs:complexContent>
+			<xs:extension base="sr:ReadLogPeriodFDAbstractType">
+				<xs:sequence minOccurs="0">
+					<xs:element name="SendAsURP" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReadLogPeriodOffset">
+		<xs:sequence>
+			<xs:element name="StartDateOffset" type="sr:logPeriodOffset"/>
+			<xs:element name="StartTime" type="xs:time"/>
+			<xs:element name="EndDateOffset" type="sr:logPeriodOffset"/>
+			<xs:element name="EndTime" type="xs:time"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdatePrepayConfiguration">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:choice>
+					<xs:element name="UpdatePrepayConfigElectricity" type="sr:UpdatePrepayConfigElec"/>
+					<xs:element name="UpdatePrepayConfigGas" type="sr:UpdatePrepayConfigGas"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UpdatePrepayConfigElec">
+		<xs:sequence>
+			<xs:element name="DebtRecoveryRateCap" type="xs:unsignedShort"/>
+			<xs:element name="EmergencyCreditLimit" type="xs:int"/>
+			<xs:element name="EmergencyCreditThreshold" type="xs:int"/>
+			<xs:element name="LowCreditThreshold" type="xs:int"/>
+			<xs:element name="ElectricityNonDisablementCalendar" type="sr:ElectricityNonDisablementCalendar"/>
+			<xs:element name="MaxMeterBalance" type="xs:int"/>
+			<xs:element name="MaxCreditThreshold" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdatePrepayConfigGas">
+		<xs:sequence>
+			<xs:element name="DebtRecoveryRateCap" type="xs:int"/>
+			<xs:element name="EmergencyCreditLimit" type="xs:unsignedInt"/>
+			<xs:element name="EmergencyCreditThreshold" type="xs:unsignedInt"/>
+			<xs:element name="LowCreditThreshold" type="xs:unsignedInt"/>
+			<xs:element name="GasNonDisablementCalendar" type="sr:GasNonDisablementCalendar"/>
+			<xs:element name="MaxMeterBalance" type="xs:unsignedInt"/>
+			<xs:element name="MaxCreditThreshold" type="xs:unsignedInt"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PartialAddress">
+		<xs:sequence>
+			<xs:element name="PostCode" type="sr:PostCode"/>
+			<xs:element name="AddressIdentifier" type="sr:AddressIdentifier"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecSpecialDaysPrepayment">
+		<xs:sequence>
+			<xs:element name="SpecialDay" minOccurs="0" maxOccurs="20">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="sr:ElecSpecialDayPrepayment">
+							<xs:attribute name="index" type="sr:range_1_20" use="required"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecSpecialDayPrepayment">
+		<xs:sequence>
+			<xs:element name="Date" type="sr:Date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectricityNonDisablementCalendar">
+		<xs:sequence>
+			<xs:element name="ElectricitySpecialDays" type="sr:ElecSpecialDaysPrepayment"/>
+			<xs:element name="ElectricityNonDisablementSchedule" type="sr:ElectricityNonDisablementSchedule" maxOccurs="22"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectricityNonDisablementSchedule">
+		<xs:sequence>
+			<xs:element name="NonDisablementScript">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="START"/>
+						<xs:enumeration value="STOP"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SpecialDaysApplicability" type="sr:SpecialDaysApplicability"/>
+			<xs:element name="DaysOfWeekApplicability" type="sr:DaysOfWeekApplicability"/>
+			<xs:element name="ScheduleDatesAndTime" type="sr:ScheduleDatesAndTimeWithoutWildcards"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ALCSHCALCSConnectionSchedule">
+		<xs:sequence>
+			<xs:element name="ActivateDeactivateSwitch" type="sr:ActivateDeactivateSwitch"/>
+			<xs:element name="SpecialDaysApplicability" minOccurs="0" maxOccurs="20">
+				<xs:complexType>
+					<xs:attribute name="index" type="sr:range_1_20" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DaysOfWeekApplicability" type="sr:DaysOfWeekApplicability" minOccurs="0"/>
+			<xs:element name="ALCSScheduleDatesAndTime" type="sr:ScheduleDatesAndTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ActivateDeactivateSwitch">
+		<xs:choice>
+			<xs:element name="ActivateSwitch" type="sr:NoType"/>
+			<xs:element name="DeactivateSwitch" type="sr:NoType"/>
+		</xs:choice>
+		<xs:attribute name="index" type="sr:range_1_5" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="MaximumDemandTimePeriodSchedule">
+		<xs:sequence>
+			<xs:element name="StartTime" type="xs:time"/>
+			<xs:element name="EndTime" type="xs:time"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ScheduleDatesAndTimeWithoutWildcards">
+		<xs:sequence>
+			<xs:element name="SwitchTime" type="xs:time"/>
+			<xs:element name="StartDate" type="xs:date"/>
+			<xs:element name="EndDate" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ScheduleDatesAndTime">
+		<xs:sequence>
+			<xs:element name="SwitchTime" type="xs:time"/>
+			<xs:element name="StartDate" type="sr:Date"/>
+			<xs:element name="EndDate" type="sr:Date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SpecialDaysApplicability">
+		<xs:sequence>
+			<xs:element name="SpecialDayApplicability" type="sr:SpecialDayApplicability" minOccurs="0" maxOccurs="20"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SpecialDayApplicability">
+		<xs:sequence>
+			<xs:element name="SpecialDayID">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="20"/>
+						<!-- Special Day 1  -->
+						<!-- Special Day 20  -->
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DaysOfWeekApplicability">
+		<xs:sequence>
+			<xs:element name="DayOfWeekApplicability" type="sr:DayOfWeekApplicability" minOccurs="0" maxOccurs="7"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DayOfWeekApplicability">
+		<xs:sequence>
+			<xs:element name="DayOfWeekID">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Monday"/>
+						<xs:enumeration value="Tuesday"/>
+						<xs:enumeration value="Wednesday"/>
+						<xs:enumeration value="Thursday"/>
+						<xs:enumeration value="Friday"/>
+						<xs:enumeration value="Saturday"/>
+						<xs:enumeration value="Sunday"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasNonDisablementCalendar">
+		<xs:sequence>
+			<xs:element name="DayProfiles" type="sr:GasNonDisablementDayProfiles"/>
+			<xs:element name="WeekProfiles" type="sr:GasWeekProfilesNonDisablement"/>
+			<xs:element name="SeasonProfiles" type="sr:GasSeasonsNonDisablement"/>
+			<xs:element name="SpecialDays" type="sr:GasSpecialDaysNonDisablement"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateSecurityCredentialsKRP">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="RemotePartyRole" type="sr:RemotePartyRole"/>
+					<xs:element name="RemotePartyFloorSeqNumber" type="sr:floorSequenceNumber" minOccurs="0"/>
+					<xs:element name="RemotePartyPrepaymentTopUpFloorSeqNumber" type="sr:floorSequenceNumber" minOccurs="0"/>
+					<xs:element name="ReplacementCertificates" type="sr:ReplacementCertificatesKRP"/>
+					<xs:element name="ApplyTimeBasedCPVChecks" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UpdateSecurityCredentialsDevice">
+		<xs:sequence>
+			<xs:element name="DeviceCertificate" type="sr:Certificate"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateDeviceCredentialsOrchestrationDCCA">
+		<xs:sequence>
+			<xs:element name="CredentialType" type="sr:CredentialType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IssueSecurityCredentials">
+		<xs:sequence>
+			<xs:element name="CredentialType" type="sr:CredentialType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RequestHandoverOfDCCControlledDevice">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="RemotePartyRole" type="sr:RemotePartyRole"/>
+					<xs:element name="RemotePartyFloorSeqNumber" type="sr:floorSequenceNumber" minOccurs="0"/>
+					<xs:element name="RemotePartyPrepaymentTopUpFloorSeqNumber" type="sr:floorSequenceNumber" minOccurs="0"/>
+					<xs:element name="ReplacementCertificates" type="sr:ReplacementCertificatesDCCHandover"/>
+					<xs:element name="ApplyTimeBasedCPVChecks" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="EnableDisableAlert">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Disable"/>
+			<xs:enumeration value="Enable"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Supplier ESME Common-->
+	<xs:complexType name="SupplierESMECommon">
+		<xs:sequence>
+			<xs:element name="x810D" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x810E" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8119" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8183" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A1" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A4" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A5" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A6" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A7" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A8" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A9" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AA" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AB" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AC" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AD" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AE" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AF" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B0" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B1" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B2" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B3" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B8" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B9" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BA" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BB" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BC" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BD" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BE" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81C0" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81C1" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81C4" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81C5" type="sr:EnableDisableAlert" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Supplier ESME Poly Phase-->
+	<xs:complexType name="SupplierESMEPolyPhase">
+		<xs:sequence>
+			<xs:element name="x81B7" type="sr:EnableDisableAlert" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectricitySupplierAlerts">
+		<xs:sequence>
+			<xs:element name="SupplierESMECommon" type="sr:SupplierESMECommon" minOccurs="0"/>
+			<xs:element name="SupplierESMEPolyPhase" type="sr:SupplierESMEPolyPhase" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Network Operator ESME Common -->
+	<xs:complexType name="NetworkOperatorESMECommon">
+		<xs:sequence>
+			<xs:element name="x8014" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8015" type="sr:EnableDisableAlert" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Network Operator ESME Single Phase-->
+	<xs:complexType name="NetworkOperatorESMESinglePhase">
+		<xs:sequence>
+			<xs:element name="x8002" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8006" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8020" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8024" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8028" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x802C" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8085" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8089" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x808D" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8091" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8095" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8099" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8010" type="sr:EnableDisableAlert" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Network Operator ESME Poly Phase-->
+	<xs:complexType name="NetworkOperatorESMEPolyPhase">
+		<xs:sequence>
+			<xs:element name="x8003" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8004" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8005" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8007" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8008" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8009" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8021" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8022" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8023" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8025" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8026" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8027" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8029" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x802A" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x802B" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x802D" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x802E" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x802F" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8086" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8087" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8088" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x808A" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x808B" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x808C" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x808E" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x808F" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8090" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8092" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8093" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8094" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8096" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8097" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8098" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x809A" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x809B" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x809C" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8011" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8016" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8013" type="sr:EnableDisableAlert" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectricityNetworkOperatorAlerts">
+		<xs:sequence>
+			<xs:element name="NetworkOperatorESMECommon" type="sr:NetworkOperatorESMECommon" minOccurs="0"/>
+			<xs:choice>
+				<xs:element name="NetworkOperatorESMESinglePhase" type="sr:NetworkOperatorESMESinglePhase" minOccurs="0"/>
+				<xs:element name="NetworkOperatorESMEPolyPhase" type="sr:NetworkOperatorESMEPolyPhase" minOccurs="0"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Supplier GSME-->
+	<xs:complexType name="SupplierGSME">
+		<xs:sequence>
+			<xs:element name="x810D" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x810E" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8119" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8183" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x8184" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A1" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A4" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A5" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A6" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A7" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A8" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81A9" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AA" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AB" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AC" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AD" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AE" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81AF" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B0" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B1" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B2" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B3" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B4" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B5" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B6" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81B9" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BA" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BC" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BD" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BE" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81BF" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81C0" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81C2" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81C3" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81C4" type="sr:EnableDisableAlert" minOccurs="0"/>
+			<xs:element name="x81C5" type="sr:EnableDisableAlert" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ConfigureAlertBehaviour">
+		<xs:choice>
+			<xs:element name="ElectricitySupplierAlerts" type="sr:ElectricitySupplierAlerts"/>
+			<xs:element name="ElectricityNetworkOperatorAlerts" type="sr:ElectricityNetworkOperatorAlerts"/>
+			<xs:element name="GasSupplierAlerts" type="sr:SupplierGSME"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="UpdateSecurityCredentialsCoS">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="SupplierFloorSeqNumber" type="sr:floorSequenceNumber" minOccurs="0"/>
+					<xs:element name="SupplierPrepaymentTopUpFloorSeqNumber" type="sr:floorSequenceNumber" minOccurs="0"/>
+					<xs:element name="SupplierReplacementCertificates" type="sr:ReplacementCertificatesCoS"/>
+					<xs:element name="ApplyTimeBasedCPVChecks" type="xs:boolean"/>
+					<xs:element name="ImportMPxN" type="sr:ImportMPxN"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ServiceOptOut">
+		<xs:complexContent>
+			<xs:extension base="sr:MandatoryFutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="ACBFloorSeqNumber" type="sr:floorSequenceNumber"/>
+					<xs:element name="ReplacementCertificates" type="sr:ReplacementCertificatesACB"/>
+					<xs:element name="CertificationPathCertificates" type="sr:CertificationPathCertificates"/>
+					<xs:element name="ApplyTimeBasedCPVChecks" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="RemotePartyRole">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ACB"/>
+			<xs:enumeration value="NetworkOperator"/>
+			<xs:enumeration value="Recovery"/>
+			<xs:enumeration value="Root"/>
+			<xs:enumeration value="Supplier"/>
+			<xs:enumeration value="TransCoS"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Certificate">
+		<xs:restriction base="xs:base64Binary"/>
+	</xs:simpleType>
+	<xs:simpleType name="CertificateName">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CertificationPathCertificates">
+		<xs:sequence>
+			<xs:element name="Certificate" type="sr:Certificate" maxOccurs="3"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReplacementCertificatesKRP">
+		<xs:choice>
+			<xs:element name="SupplierOrNetworkOperatorCertificates" type="sr:SupplierOrNetworkOperatorCertificatesKRP"/>
+			<xs:element name="RootCertificate" type="sr:NoType"/>
+		</xs:choice>
+	</xs:complexType>
+	<!-- Services -->
+	<xs:complexType name="SupplierOrNetworkOperatorCertificatesKRP">
+		<xs:sequence>
+			<xs:element name="DigitalSigningCertificate" type="sr:CertificateName" minOccurs="0"/>
+			<xs:element name="KeyAgreementCertificate" type="sr:CertificateName" minOccurs="0"/>
+			<xs:element name="KeyAgreementTopUpCertificate" type="sr:CertificateName" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReplacementCertificatesDCCHandover">
+		<xs:sequence>
+			<xs:element name="DigitalSigningCertificate" type="sr:CertificateName"/>
+			<xs:element name="KeyAgreementCertificate" type="sr:CertificateName" minOccurs="0"/>
+			<xs:element name="KeyAgreementTopUpCertificate" type="sr:CertificateName" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReplacementCertificatesCoS">
+		<xs:sequence>
+			<xs:element name="DigitalSigningCertificate" type="sr:CertificateName"/>
+			<xs:element name="KeyAgreementCertificate" type="sr:CertificateName" minOccurs="0"/>
+			<xs:element name="KeyAgreementTopUpCertificate" type="sr:CertificateName" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReplacementCertificatesACB">
+		<xs:sequence>
+			<xs:element name="DigitalSigningCertificate" type="sr:Certificate" minOccurs="0"/>
+			<xs:element name="KeyAgreementCertificate" type="sr:Certificate"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TopUpDevice">
+		<xs:sequence>
+			<xs:element name="UTRN">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+						<xs:minLength value="20"/>
+						<xs:pattern value="[0-9]{20}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="TopUpAmount">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="8191"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopUpCurrencyUnit">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Pounds"/>
+			<xs:enumeration value="Pence"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TopUpDeviceDCCA">
+		<xs:sequence>
+			<xs:element name="TopUpAmount" type="sr:TopUpAmount"/>
+			<xs:element name="TopUpCurrencyUnit" type="sr:TopUpCurrencyUnit"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GetUTRNDCCA">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:element name="TopUpAmount" type="sr:TopUpAmount"/>
+			<xs:element name="TopUpCurrencyUnit" type="sr:TopUpCurrencyUnit"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElecDebtRecovery">
+		<xs:sequence>
+			<xs:element name="DebtRecoveryRate" type="xs:short"/>
+			<xs:element name="DebtRecoveryRatePriceScale" type="sr:PriceScale"/>
+			<xs:element name="DebtRecoveryRatePeriod">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="HOURLY"/>
+						<xs:enumeration value="DAILY"/>
+						<xs:enumeration value="WEEKLY"/>
+						<xs:enumeration value="MONTHLY"/>
+						<xs:enumeration value="QUARTERLY"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasDebtRecovery">
+		<xs:sequence>
+			<xs:element name="DebtRecoveryRate" type="xs:int"/>
+			<xs:element name="DebtRecoveryRatePeriod">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="HOURLY"/>
+						<xs:enumeration value="DAILY"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateDebt">
+		<xs:sequence>
+			<xs:element name="TimeDebtRegister1" type="xs:int"/>
+			<xs:element name="TimeDebtRegister2" type="xs:int"/>
+			<xs:element name="PaymentDebtRegister" type="xs:int"/>
+			<xs:element name="DebtRecoveryPerPayment">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedShort">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="10000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element name="ElecDebtRecovery1" type="sr:ElecDebtRecovery"/>
+					<xs:element name="ElecDebtRecovery2" type="sr:ElecDebtRecovery"/>
+				</xs:sequence>
+				<xs:sequence>
+					<xs:element name="GasDebtRecovery1" type="sr:GasDebtRecovery"/>
+					<xs:element name="GasDebtRecovery2" type="sr:GasDebtRecovery"/>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ActivateEmergencyCredit"/>
+	<xs:complexType name="DisplayMessage">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="SupplierMessage">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="116"/>
+								<xs:minLength value="1"/>
+								<xs:pattern value="[ -~]+"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RestrictAccessForChangeOfTenancy">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="RestrictionDateTime" type="xs:dateTime"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ClearEventLog">
+		<xs:sequence>
+			<xs:element name="ESMEEventLogType" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ESME"/>
+						<xs:enumeration value="ALCS"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateSupplierName">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="SupplierName">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="15"/>
+								<xs:pattern value="[ -~]+"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="SupplierTelephoneNumber">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="18"/>
+								<xs:pattern value="[0-9 ]+"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DisablePrivacyPIN"/>
+	<xs:complexType name="ReadInstantaneousImportRegisters">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UpdateDeviceConfigurationLoadLimitingGeneralSettings">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="LoadLimitPeriod" type="xs:unsignedInt"/>
+					<xs:element name="LoadLimitPowerThreshold" type="xs:unsignedInt"/>
+					<xs:element name="LoadLimitRestorationPeriod" type="xs:unsignedInt"/>
+					<xs:element name="LoadLimitSupplyState">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="Disable"/>
+								<xs:enumeration value="Unchanged"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UpdateDeviceConfigurationLoadLimitingCounterReset">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UpdateDeviceConfigurationVoltage">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="RMSVoltageSettings" type="sr:RMSVoltageSettings"/>
+					<xs:choice>
+						<xs:element name="SinglePhaseVoltageSettings" type="sr:AverageRMSVoltageSettings"/>
+						<xs:element name="PolyPhaseVoltageSettings" type="sr:PolyPhaseVoltageSettings" minOccurs="3" maxOccurs="3"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AverageRMSVoltageSettings">
+		<xs:sequence>
+			<xs:element name="AverageRMSOverVoltageThreshold" type="xs:unsignedInt"/>
+			<xs:element name="AverageRMSUnderVoltageThreshold" type="xs:unsignedInt"/>
+			<xs:element name="AverageRMSVoltageMeasurementPeriod" type="xs:unsignedInt"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RMSVoltageSettings">
+		<xs:sequence>
+			<xs:element name="RMSExtremeOverVoltageMeasurementPeriod" type="xs:unsignedInt"/>
+			<xs:element name="RMSExtremeOverVoltageThreshold" type="xs:unsignedInt"/>
+			<xs:element name="RMSExtremeUnderVoltageMeasurementPeriod" type="xs:unsignedInt"/>
+			<xs:element name="RMSExtremeUnderVoltageThreshold" type="xs:unsignedInt"/>
+			<xs:element name="RMSVoltageSagMeasurementPeriod" type="xs:unsignedInt"/>
+			<xs:element name="RMSVoltageSagThreshold" type="xs:unsignedInt"/>
+			<xs:element name="RMSVoltageSwellMeasurementPeriod" type="xs:unsignedInt"/>
+			<xs:element name="RMSVoltageSwellThreshold" type="xs:unsignedInt"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PolyPhaseVoltageSettings">
+		<xs:sequence>
+			<xs:element name="Phase">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PhaseVoltageSettings" type="sr:AverageRMSVoltageSettings"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateDeviceConfigurationGasConversion">
+		<xs:sequence>
+			<xs:element name="CalorificValue">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:fractionDigits value="1"/>
+						<xs:maxInclusive value="429496729.5"/>
+						<xs:minInclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ConversionFactor">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:fractionDigits value="5"/>
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="42949.67295"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateDeviceConfigurationGasFlow">
+		<xs:sequence>
+			<xs:element name="UncontrolledGasFlowRate" type="xs:unsignedShort"/>
+			<xs:element name="SupplyDepletionState">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Unchanged"/>
+						<xs:enumeration value="Locked"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SupplyTamperState">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Unchanged"/>
+						<xs:enumeration value="Locked"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StabilisationPeriod">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:maxInclusive value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MeasurementPeriod">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:maxInclusive value="65535"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BillingCalendarDayOfWeek">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="7"/>
+			<xs:minInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BillingCalendarDayOfMonth">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="28"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ElectricityBillingCalendar">
+		<xs:sequence>
+			<xs:element name="BillingTime" type="xs:time"/>
+			<xs:choice>
+				<xs:element name="Daily" type="sr:NoType"/>
+				<xs:element name="Weekly" type="sr:BillingCalendarDayOfWeek"/>
+				<xs:element name="Monthly" type="sr:BillingCalendarDayOfMonth"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasBillingCalendar">
+		<xs:sequence>
+			<xs:element name="BillingPeriodStart" type="xs:dateTime"/>
+			<xs:element name="Periodicity">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Daily"/>
+						<xs:enumeration value="Weekly"/>
+						<xs:enumeration value="Monthly"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BillingCalendar">
+		<xs:choice>
+			<xs:element name="ElectricityBillingCalendar" type="sr:ElectricityBillingCalendar"/>
+			<xs:element name="GasBillingCalendar" type="sr:GasBillingCalendar"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="SynchroniseClock">
+		<xs:sequence>
+			<xs:element name="CurrentDateTime" type="xs:dateTime"/>
+			<xs:element name="TolerancePeriod" type="sr:tolerancePeriod"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateDeviceConfigurationInstantaneousPowerThreshold">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="LowMediumPowerThreshold" type="xs:unsignedInt"/>
+					<xs:element name="MediumHighPowerThreshold" type="xs:unsignedInt"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReadEventOrSecurityLog">
+		<xs:complexContent>
+			<xs:extension base="sr:ReadLogOnDemand">
+				<xs:sequence>
+					<xs:element name="LogToRead">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="Event"/>
+								<xs:enumeration value="ALCSEvent"/>
+								<xs:enumeration value="PowerEvent"/>
+								<xs:enumeration value="Security"/>
+								<xs:enumeration value="GSMEEvent"/>
+								<xs:enumeration value="GSMESecurity"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SetMaximumDemandConfigurableTimePeriod">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="MaximumDemandTimePeriodSchedule" type="sr:MaximumDemandTimePeriodSchedule"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResetMaximumDemandRegisters">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="MaxDemandActivePowerImportValue" type="sr:Reset" minOccurs="0"/>
+					<xs:element name="MaxDemandActivePowerExportValue" type="sr:Reset" minOccurs="0"/>
+					<xs:element name="MaxDemandConfigTimeActivePowerImportValue" type="sr:Reset" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Reset"/>
+	<xs:complexType name="SetDeviceConfigurationImportMPxN">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:choice>
+					<xs:element name="ImportMPANs" type="sr:ImportMPANs"/>
+					<xs:element name="ImportMPRN" type="sr:MPRN"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ImportMPANs">
+		<xs:sequence>
+			<xs:element name="ImportMPAN" type="sr:MPAN"/>
+			<xs:element name="SecondaryImportMPAN" type="sr:MPAN" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SetDeviceConfiguratinExportMPAN">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="ExportMPAN" type="sr:MPAN"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReturnLocalCommandResponse">
+		<xs:sequence>
+			<xs:element name="OriginalRequestID" type="sr:RequestIDType" minOccurs="0"/>
+			<xs:element name="DeviceGBCSResponse" type="xs:base64Binary"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParseLocalCommandResponseDCCA">
+		<xs:sequence>
+			<xs:element name="OriginalServiceReferenceVariant" type="sr:ServiceReferenceVariant"/>
+			<xs:element name="DeviceGBCSResponse" type="xs:base64Binary"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DSPReadData"/>
+	<xs:complexType name="UpdateMeterBalance">
+		<xs:choice>
+			<xs:element name="PrepaymentMode" type="sr:AdjustOrReset"/>
+			<xs:element name="CreditMode" type="sr:AdjustOrReset"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="AdjustOrReset">
+		<xs:choice>
+			<xs:element name="AdjustMeterBalance" type="xs:int"/>
+			<xs:element name="ResetMeterBalance" type="sr:ResetMeterBalance"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ResetMeterBalance"/>
+	<xs:complexType name="UpdatePaymentMode">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:choice>
+					<xs:element name="Credit" type="sr:NoType"/>
+					<xs:element name="Prepayment">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SuspendDebtDisabled" type="xs:boolean"/>
+								<xs:element name="SuspendDebtEmergency" type="xs:boolean"/>
+								<xs:element name="DisablementThreshold" type="xs:int"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResetTariffBlockCounterMatrix"/>
+	<xs:complexType name="GasNonDisablementDayProfiles">
+		<xs:sequence>
+			<xs:element name="GasNonDisablementDayProfile" type="sr:GasNonDisablementDayProfile" maxOccurs="5"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasNonDisablementDayProfile">
+		<xs:sequence>
+			<xs:element name="TimeStartAction" type="sr:GasNonDisablementTimeStartAction" maxOccurs="3"/>
+			<xs:element name="GasDayName" type="sr:GasDayNameNonDisablement"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasNonDisablementTimeStartAction">
+		<xs:sequence>
+			<xs:element name="StartTime" type="xs:time"/>
+			<xs:element name="NonDisablementAction">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="START"/>
+						<xs:enumeration value="STOP"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="CommandVariant">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ServiceReferenceVariant">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1.1.1"/>
+			<xs:enumeration value="1.1.2"/>
+			<xs:enumeration value="1.2.1"/>
+			<xs:enumeration value="1.2.2"/>
+			<xs:enumeration value="1.5"/>
+			<xs:enumeration value="1.6"/>
+			<xs:enumeration value="1.7"/>
+			<xs:enumeration value="2.1"/>
+			<xs:enumeration value="2.2"/>
+			<xs:enumeration value="2.3"/>
+			<xs:enumeration value="2.5"/>
+			<xs:enumeration value="3.1"/>
+			<xs:enumeration value="3.2"/>
+			<xs:enumeration value="3.3"/>
+			<xs:enumeration value="3.4"/>
+			<xs:enumeration value="3.5"/>
+			<xs:enumeration value="4.1.1"/>
+			<xs:enumeration value="4.1.2"/>
+			<xs:enumeration value="4.1.3"/>
+			<xs:enumeration value="4.1.4"/>
+			<xs:enumeration value="4.2"/>
+			<xs:enumeration value="4.3"/>
+			<xs:enumeration value="4.4.2"/>
+			<xs:enumeration value="4.4.3"/>
+			<xs:enumeration value="4.4.4"/>
+			<xs:enumeration value="4.4.5"/>
+			<xs:enumeration value="4.6.1"/>
+			<xs:enumeration value="4.6.2"/>
+			<xs:enumeration value="4.8.1"/>
+			<xs:enumeration value="4.8.2"/>
+			<xs:enumeration value="4.8.3"/>
+			<xs:enumeration value="4.10"/>
+			<xs:enumeration value="4.11.1"/>
+			<xs:enumeration value="4.11.2"/>
+			<xs:enumeration value="4.12.1"/>
+			<xs:enumeration value="4.12.2"/>
+			<xs:enumeration value="4.13"/>
+			<xs:enumeration value="4.14"/>
+			<xs:enumeration value="4.15"/>
+			<xs:enumeration value="4.16"/>
+			<xs:enumeration value="4.17"/>
+			<xs:enumeration value="4.18"/>
+			<xs:enumeration value="5.1"/>
+			<xs:enumeration value="5.2"/>
+			<xs:enumeration value="5.3"/>
+			<xs:enumeration value="6.2.1"/>
+			<xs:enumeration value="6.2.2"/>
+			<xs:enumeration value="6.2.3"/>
+			<xs:enumeration value="6.2.4"/>
+			<xs:enumeration value="6.2.5"/>
+			<xs:enumeration value="6.2.7"/>
+			<xs:enumeration value="6.2.8"/>
+			<xs:enumeration value="6.2.9"/>
+			<xs:enumeration value="6.4.1"/>
+			<xs:enumeration value="6.4.2"/>
+			<xs:enumeration value="6.5"/>
+			<xs:enumeration value="6.6"/>
+			<xs:enumeration value="6.7"/>
+			<xs:enumeration value="6.8"/>
+			<xs:enumeration value="6.11"/>
+			<xs:enumeration value="6.12"/>
+			<xs:enumeration value="6.13"/>
+			<xs:enumeration value="6.14.1"/>
+			<xs:enumeration value="6.14.2"/>
+			<xs:enumeration value="6.15.1"/>
+			<xs:enumeration value="6.15.2"/>
+			<xs:enumeration value="6.17"/>
+			<xs:enumeration value="6.18.1"/>
+			<xs:enumeration value="6.18.2"/>
+			<xs:enumeration value="6.20.1"/>
+			<xs:enumeration value="6.20.2"/>
+			<xs:enumeration value="6.21"/>
+			<xs:enumeration value="6.22"/>
+			<xs:enumeration value="6.23"/>
+			<xs:enumeration value="6.24.1"/>
+			<xs:enumeration value="6.24.2"/>
+			<xs:enumeration value="6.25"/>
+			<xs:enumeration value="7.1"/>
+			<xs:enumeration value="7.2"/>
+			<xs:enumeration value="7.3"/>
+			<xs:enumeration value="7.4"/>
+			<xs:enumeration value="7.5"/>
+			<xs:enumeration value="7.6"/>
+			<xs:enumeration value="7.7"/>
+			<xs:enumeration value="7.8"/>
+			<xs:enumeration value="7.9"/>
+			<xs:enumeration value="7.10"/>
+			<xs:enumeration value="7.11"/>
+			<xs:enumeration value="7.12"/>
+			<xs:enumeration value="8.1.1"/>
+			<xs:enumeration value="8.2"/>
+			<xs:enumeration value="8.3"/>
+			<xs:enumeration value="8.4"/>
+			<xs:enumeration value="8.5"/>
+			<xs:enumeration value="8.6"/>
+			<xs:enumeration value="8.7.1"/>
+			<xs:enumeration value="8.7.2"/>
+			<xs:enumeration value="8.8.1"/>
+			<xs:enumeration value="8.8.2"/>
+			<xs:enumeration value="8.9"/>
+			<xs:enumeration value="8.11"/>
+			<xs:enumeration value="8.12.1"/>
+			<xs:enumeration value="8.12.2"/>
+			<xs:enumeration value="8.13"/>
+			<xs:enumeration value="8.14.1"/>
+			<xs:enumeration value="8.14.2"/>
+			<xs:enumeration value="8.14.3"/>
+			<xs:enumeration value="8.14.4"/>
+			<xs:enumeration value="9.1"/>
+			<xs:enumeration value="11.1"/>
+			<xs:enumeration value="11.2"/>
+			<xs:enumeration value="11.3"/>
+			<xs:enumeration value="12.1"/>
+			<xs:enumeration value="12.2"/>
+			<xs:enumeration value="14.1"/>
+			<xs:enumeration value="D.1.1"/>
+			<xs:enumeration value="D.1.2"/>
+			<xs:enumeration value="D.1.3"/>
+			<xs:enumeration value="D.1.4"/>
+			<xs:enumeration value="D.2.1"/>
+			<xs:enumeration value="D.3.1"/>
+			<xs:enumeration value="D.4.1"/>
+			<xs:enumeration value="D.5.1"/>
+			<xs:enumeration value="D.5.2"/>
+			<xs:enumeration value="D.5.3"/>
+			<xs:enumeration value="D.5.4"/>
+			<xs:enumeration value="D.5.5"/>
+			<!-- DCC Adapter-provided Service Requests -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CredentialType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Digital Signature"/>
+			<xs:enumeration value="Key Agreement"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RetrieveDeviceSecurityCredentialsKRP">
+		<xs:sequence>
+			<xs:element name="RemotePartyRole" type="sr:RemotePartyRole" maxOccurs="6"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RetrieveDeviceSecurityCredentialsDevice">
+		<xs:sequence>
+			<xs:element name="CredentialType" type="sr:CredentialType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SetElectricitySupplyTamperState">
+		<xs:sequence>
+			<xs:element name="SupplyTamperState">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Locked"/>
+						<xs:enumeration value="Unchanged"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="DSPScheduledServiceReference">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="4.6"/>
+			<xs:enumeration value="4.8"/>
+			<xs:enumeration value="4.10"/>
+			<xs:enumeration value="4.12"/>
+			<xs:enumeration value="4.14"/>
+			<xs:enumeration value="4.15"/>
+			<xs:enumeration value="4.16"/>
+			<xs:enumeration value="4.17"/>
+			<xs:enumeration value="14.1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DSPScheduledServiceReferenceVariant">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="4.6.1"/>
+			<xs:enumeration value="4.6.2"/>
+			<xs:enumeration value="4.8.1"/>
+			<xs:enumeration value="4.8.2"/>
+			<xs:enumeration value="4.8.3"/>
+			<xs:enumeration value="4.10"/>
+			<xs:enumeration value="4.12.1"/>
+			<xs:enumeration value="4.12.2"/>
+			<xs:enumeration value="4.14"/>
+			<xs:enumeration value="4.15"/>
+			<xs:enumeration value="4.16"/>
+			<xs:enumeration value="4.17"/>
+			<xs:enumeration value="14.1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ScheduleFrequency">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Daily"/>
+			<xs:enumeration value="Weekly"/>
+			<xs:enumeration value="Monthly"/>
+			<xs:enumeration value="Quarterly"/>
+			<xs:enumeration value="Half-Yearly"/>
+			<xs:enumeration value="Yearly"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UpdateDeviceStatusExceptCH">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Pending"/>
+			<xs:enumeration value="InstalledNotCommissioned"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UpdateDeviceStatusCH">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Commissioned"/>
+			<xs:enumeration value="Withdrawn"/>
+			<xs:enumeration value="InstalledNotCommissioned"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DeviceType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ESME"/>
+			<xs:enumeration value="GSME"/>
+			<xs:enumeration value="GPF"/>
+			<xs:enumeration value="CHF"/>
+			<xs:enumeration value="HCALCS"/>
+			<xs:enumeration value="PPMID"/>
+			<xs:enumeration value="IHD"/>
+			<xs:enumeration value="CAD"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Date">
+		<xs:sequence>
+			<xs:element name="Year" type="sr:Year"/>
+			<xs:element name="Month" type="sr:Month"/>
+			<xs:element name="DayOfMonth" type="sr:DayOfMonth"/>
+			<xs:element name="DayOfWeek" type="sr:DayOfWeek"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Year">
+		<xs:choice>
+			<xs:element name="SpecifiedYear">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="2014"/>
+						<xs:totalDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="NonSpecifiedYear" type="sr:NoType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="Month">
+		<xs:choice>
+			<xs:element name="SpecifiedMonth">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="12"/>
+						<xs:totalDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="NonSpecifiedMonth" type="sr:NoType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="DayOfMonth">
+		<xs:choice>
+			<xs:element name="SpecifiedDayOfMonth">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="31"/>
+						<xs:totalDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="LastDayOfMonth" type="sr:NoType"/>
+			<xs:element name="SecondLastDayOfMonth" type="sr:NoType"/>
+			<xs:element name="NonSpecifiedDayOfMonth" type="sr:NoType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="DayOfWeek">
+		<xs:choice>
+			<xs:element name="SpecifiedDayOfWeek">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="7"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="NonSpecifiedDayOfWeek" type="sr:NoType"/>
+		</xs:choice>
+	</xs:complexType>
+	<!-- gas wildcard date -->
+	<xs:complexType name="GasDateWithWildcards">
+		<xs:sequence>
+			<xs:element name="GasYearWithWildcards" type="sr:GasYearWithWildcards"/>
+			<xs:element name="GasMonthWithWildcards" type="sr:GasMonthWithWildcards"/>
+			<xs:element name="GasDayOfMonthWithWildcards" type="sr:GasDayOfMonthWithWildcards"/>
+			<xs:element name="GasDayOfWeekWithWildcards" type="sr:GasDayOfWeekWithWildcards"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GasYearWithWildcards">
+		<xs:choice>
+			<xs:element name="SpecifiedYear">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="2014"/>
+						<xs:totalDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="NonSpecifiedYear" type="sr:NoType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="GasMonthWithWildcards">
+		<xs:choice>
+			<xs:element name="SpecifiedMonth">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="12"/>
+						<xs:totalDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="NonSpecifiedMonth" type="sr:NoType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="GasDayOfMonthWithWildcards">
+		<xs:choice>
+			<xs:element name="SpecifiedDayOfMonth">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="31"/>
+						<xs:totalDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="GasNonSpecifiedDayOfMonth" type="sr:NoType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="GasDayOfWeekWithWildcards">
+		<xs:choice>
+			<xs:element name="SpecifiedDayOfWeek">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="7"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="NonSpecifiedDayOfWeek" type="sr:NoType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="UpdateDeviceConfigurationALCDescriptions">
+		<xs:sequence>
+			<xs:element name="ALCSHCALCSDescription" type="sr:ALCSHCALCSDescription" maxOccurs="5"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateDeviceConfigurationALCScheduler">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="ALCSHCALCSConnectionSchedule" type="sr:ALCSHCALCSConnectionSchedule" maxOccurs="48"/>
+					<xs:element name="ALCSHCALCSSpecialDays" type="sr:ALCSHCALCSSpecialDays"/>
+					<xs:element name="SwitchTypeAndId" type="sr:SwitchTypeAndId" minOccurs="0" maxOccurs="5"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ALCSHCALCSDescription">
+		<xs:sequence>
+			<xs:element name="SwitchDescription">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="127"/>
+						<xs:pattern value="[ -~]+"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="index" type="sr:range_1_5" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="SwitchTypeAndId">
+		<xs:choice>
+			<xs:element name="ALCS" type="sr:NoType"/>
+			<xs:element name="HCALCS" type="sr:EUI"/>
+		</xs:choice>
+		<xs:attribute name="index" type="sr:range_1_5" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ALCSHCALCSSpecialDays">
+		<xs:sequence>
+			<xs:element name="ALCSHCALCSSpecialDay" minOccurs="0" maxOccurs="20">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="sr:Date">
+							<xs:attribute name="index" type="sr:range_1_20" use="required"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReadSchedule">
+		<xs:choice>
+			<xs:element name="DSPScheduleID" type="sr:scheduleID"/>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="DeleteSchedule">
+		<xs:choice>
+			<xs:element name="DSPScheduleID" type="sr:scheduleID"/>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="DecommissionDevice">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateInventory">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:choice>
+				<xs:element name="UpdateDeviceStatusExceptCH" type="sr:UpdateDeviceStatusExceptCH"/>
+				<xs:element name="UpdateDeviceStatusCH" type="sr:UpdateDeviceStatusCH"/>
+				<xs:element name="UpdateDeviceDetails" type="sr:UpdateDeviceDetails"/>
+				<xs:element name="DeleteDevice" type="sr:DeleteDevice"/>
+				<xs:element name="UpdateMPxN" type="sr:UpdateMPxN"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateMPxN">
+		<xs:choice>
+			<xs:element name="ImportMPxN" type="sr:ImportMPxN"/>
+			<xs:element name="SecondaryImportMPAN">
+				<xs:simpleType>
+					<xs:restriction base="sr:MPAN">
+						<xs:minLength value="13"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ExportMPAN">
+				<xs:simpleType>
+					<xs:restriction base="sr:MPAN">
+						<xs:minLength value="13"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="DeleteDevice"/>
+	<xs:complexType name="UpdateDeviceDetails">
+		<xs:sequence>
+			<xs:element name="DeviceManufacturer" type="sr:DeviceManufacturer" minOccurs="0"/>
+			<xs:element name="DeviceModel" type="sr:DeviceModel" minOccurs="0"/>
+			<xs:element name="SMETSCHTSVersion" type="sr:SMETSCHTSVersion" minOccurs="0"/>
+			<xs:element name="FirmwareVersion" type="sr:FirmwareVersion" minOccurs="0"/>
+			<xs:element name="ESMEVariant" type="sr:ESMEVariant" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ServiceOptIn">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:element name="DeviceType" type="sr:DeviceType"/>
+			<xs:element name="MPxNs" type="sr:MeterMPxNs"/>
+			<xs:element name="OptInDate" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EnableSupply"/>
+	<xs:complexType name="DisableSupply"/>
+	<xs:complexType name="ArmSupply"/>
+	<xs:complexType name="ActivateDeactivateALCSHCALCS">
+		<xs:sequence>
+			<xs:element name="Duration" type="xs:unsignedShort"/>
+		</xs:sequence>
+		<xs:attribute name="index" type="sr:range_1_5" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ActivateAuxiliaryLoad">
+		<xs:sequence>
+			<xs:element name="ActivateALCSHCALCS" type="sr:ActivateDeactivateALCSHCALCS"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DeactivateAuxiliaryLoad">
+		<xs:sequence>
+			<xs:element name="DeactivateALCSHCALCS" type="sr:ActivateDeactivateALCSHCALCS"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReadALCSData">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResetALCSHCALCS">
+		<xs:attribute name="index" type="sr:range_1_5" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ResetAuxiliaryLoad">
+		<xs:sequence>
+			<xs:element name="ResetALCSHCALCS" type="sr:ResetALCSHCALCS"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AddAuxiliaryLoadToBoostButton">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence minOccurs="5" maxOccurs="5">
+					<xs:element name="AddToBoostButton">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:boolean">
+									<xs:attribute name="index" type="sr:range_1_5" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RemoveAuxiliaryLoadFromBoostButton">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence minOccurs="5" maxOccurs="5">
+					<xs:element name="RemoveFromBoostButton">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:boolean">
+									<xs:attribute name="index" type="sr:range_1_5" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SetRandomisedOffsetLimit">
+		<xs:sequence>
+			<xs:element name="RandomisedOffsetLimit">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:maxInclusive value="1799"/>
+						<xs:minInclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="JoinOrUnjoinDevice">
+		<xs:sequence>
+			<xs:element name="OtherDeviceID" type="sr:EUI"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReadDeviceLog">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UpdateHANDeviceLog">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="DeviceID" type="sr:EUI"/>
+					<xs:element name="RequestType">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="Add"/>
+								<xs:enumeration value="Remove"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="AddDeviceToCHFWhitelist" type="sr:AddDeviceToCHFWhitelist" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AddDeviceToCHFWhitelist">
+		<xs:sequence>
+			<xs:element name="JoinTimePeriod">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:maxInclusive value="3600"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InstallCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:hexBinary">
+						<xs:minLength value="16"/>
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ImportMPxN" type="sr:ImportMPxN" minOccurs="0"/>
+			<xs:element name="SecondaryImportMPAN" type="sr:MPAN" minOccurs="0"/>
+			<xs:element name="ExportMPAN" type="sr:MPAN" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RestoreHANDeviceLog">
+		<xs:sequence>
+			<xs:element name="OldCHFID" type="sr:EUI"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RestoreGPFDeviceLog">
+		<xs:sequence>
+			<xs:element name="OldGPFID" type="sr:EUI"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RequestCustomerIdentificationNumber"/>
+	<!-- From this point on are new types for the new 8.14.x SRs defined for CR32a	 -->
+	<xs:simpleType name="CHFInstallType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="New CHF Install"/>
+			<xs:enumeration value="Replacement CHF Install"/>
+			<xs:enumeration value="CHF Install - no SM WAN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UserRefID">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GISData">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CHFLocation">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Outside Premises"/>
+			<xs:enumeration value="Indoors on external wall"/>
+			<xs:enumeration value="Deep indoors"/>
+			<xs:enumeration value="Basement or Cellar"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PremiseType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Detached / Semi Detached"/>
+			<xs:enumeration value="Terraced"/>
+			<xs:enumeration value="Low Rise Apartment (MDU &lt;= 5 floors)"/>
+			<xs:enumeration value="High Rise Apartment (MDU &gt; 5 floors)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CHFFaultReturnType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Fault identified prior to installation"/>
+			<xs:enumeration value="Fault identified post installation"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CHFNoFaultReturnType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="No Fault Return (general)"/>
+			<xs:enumeration value="No Fault Return (non-dom opt out)"/>
+			<xs:enumeration value="No Fault Return (dual supplier HAN variant replacement)"/>
+			<xs:enumeration value="No Fault Return (SM WAN variant replacement requested by DCC)"/>
+			<xs:enumeration value="Lost or Stolen Hub"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CHFFaultReason">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Damaged case"/>
+			<xs:enumeration value="Damaged Connector"/>
+			<xs:enumeration value="Illegal interference or missing seals"/>
+			<xs:enumeration value="Environmental conditions exceeded"/>
+			<xs:enumeration value="SM WAN Fault"/>
+			<xs:enumeration value="SMHAN Interface Fault"/>
+			<xs:enumeration value="LED Fault"/>
+			<xs:enumeration value="Aerial fault"/>
+			<xs:enumeration value="Manufacturing defect"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CHFConnectionMethod">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Hot-shoe"/>
+			<xs:enumeration value="Cradle"/>
+			<xs:enumeration value="ESME"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- DCCIncidentID is for an incident ID used in service management (BMC Remedy).
+    	 Probably 15 characters e.g. INC000000000001 -->
+	<xs:simpleType name="IncidentReference">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="15"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CHFInstallSuccessSMWAN">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:element name="CHFInstallType" type="sr:CHFInstallType"/>
+			<xs:element name="InstallDateTime" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="UserRefID" type="sr:UserRefID" minOccurs="0"/>
+			<xs:element name="MPxN" type="sr:MPxN"/>
+			<xs:element name="GISData" type="sr:GISData" minOccurs="0"/>
+			<xs:element name="AerialInstall" type="xs:boolean"/>
+			<xs:element name="CHFLocation" type="sr:CHFLocation"/>
+			<xs:element name="AdditionalInformation" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<!-- SR 8.14.1 -->
+	</xs:complexType>
+	<xs:complexType name="CHFInstallSuccessNoSMWAN">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:element name="CHFInstallType" type="sr:CHFInstallType"/>
+			<xs:element name="InstallDateTime" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="UserRefID" type="sr:UserRefID" minOccurs="0"/>
+			<xs:element name="MPxN" type="sr:MPxN"/>
+			<xs:element name="GISData" type="sr:GISData" minOccurs="0"/>
+			<xs:element name="AerialInstall" type="xs:boolean"/>
+			<xs:element name="CHFLocation" type="sr:CHFLocation"/>
+			<xs:element name="PremiseType" type="sr:PremiseType"/>
+			<xs:element name="MetalObstructionCheck" type="xs:boolean"/>
+			<xs:element name="ConnectivityObstructionCheck" type="xs:boolean"/>
+			<xs:element name="SharedObstructionCheck" type="xs:boolean"/>
+			<xs:element name="AdditionalInformation" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<!-- SR 8.14.2 -->
+	</xs:complexType>
+	<xs:complexType name="CHFFaultReturn">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:element name="CHFFaultReturnType" type="sr:CHFFaultReturnType"/>
+			<xs:element name="UserRefDateTime" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="UserRefID" type="sr:UserRefID" minOccurs="0"/>
+			<xs:element name="OtherDeviceID" type="sr:EUI"/>
+			<xs:element name="IncidentReference" type="sr:IncidentReference" minOccurs="0"/>
+			<xs:element name="CHFConnectionMethod" type="sr:CHFConnectionMethod"/>
+			<xs:element name="CHFFaultReason" type="sr:CHFFaultReason"/>
+			<xs:element name="AdditionalInformation" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<!-- SR 8.14.3 -->
+	</xs:complexType>
+	<xs:complexType name="CHFNoFaultReturn">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:element name="CHFNoFaultReturnType" type="sr:CHFNoFaultReturnType"/>
+			<xs:element name="UserRefDateTime" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="UserRefID" type="sr:UserRefID" minOccurs="0"/>
+			<xs:element name="IncidentReference" type="sr:IncidentReference" minOccurs="0"/>
+			<xs:element name="AdditionalInformation" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<!-- SR 8.14.4 -->
+	</xs:complexType>
+	<xs:complexType name="UpdateFirmware">
+		<xs:sequence>
+			<xs:element name="FirmwareImage">
+				<xs:simpleType>
+					<xs:restriction base="xs:base64Binary">
+						<xs:maxLength value="1024000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FirmwareVersion" type="sr:FirmwareVersion"/>
+			<xs:element name="DeviceIDList">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="1199999"/>
+						<xs:minLength value="23"/>
+						<xs:pattern value="([A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2},)*([A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2})"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateFirmwareDCCA">
+		<xs:sequence>
+			<xs:element name="FirmwareImageID" type="xs:integer"/>
+			<xs:element name="DeviceIDList">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="1199999"/>
+						<xs:minLength value="23"/>
+						<xs:pattern value="([A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2},)*([A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2}-[A-Fa-f0-9]{2})"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReadFirmwareVersion">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ActivateFirmware">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="FirmwareHash">
+						<xs:simpleType>
+							<xs:restriction base="xs:hexBinary">
+								<xs:maxLength value="32"/>
+								<xs:minLength value="32"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ActivateFirmwareDCCA">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="FirmwareImageID" type="xs:integer"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DeviceCertificateSigningDCCA">
+		<xs:sequence>
+			<xs:element name="Version">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CertificationRequest" type="sr:CertificationRequest"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DeviceCertificateSigningBatchDCCA">
+		<xs:sequence>
+			<xs:element name="Version">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="DeviceCSR" nillable="false">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:base64Binary">
+								<xs:attribute name="ID" use="required">
+									<xs:simpleType>
+										<xs:restriction base="xs:ID">
+											<xs:minLength value="1"/>
+											<xs:maxLength value="100"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DeviceCertificateSigningBatchResultDCCA">
+		<xs:sequence>
+			<xs:element ref="sr:Version"/>
+			<xs:element ref="sr:BatchId"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Version" nillable="false">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="1.0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Build" type="xs:string" nillable="false"/>
+	<xs:element name="BatchId" type="xs:positiveInteger" nillable="false"/>
+	<xs:element name="Error" nillable="false">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ErrorCode" nillable="false">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1"/>
+							<xs:maxLength value="10"/>
+							<xs:pattern value="[A-Z]{2}:[A-Za-z0-9]+"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ErrorText" type="xs:string" nillable="false"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="PingDCCA">
+		<xs:sequence>
+			<xs:element name="EchoString" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GetCurrentKeyChunkDCCA">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GetCertificateSetDCCA">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GetCurrentKeyChunksDCCA">
+		<xs:sequence>
+			<xs:element name="CertificateSetID" type="xs:integer"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ActivateExtendKeyChunkDCCA">
+		<xs:sequence>
+			<xs:element name="KeyChunkID" type="xs:decimal"/>
+			<xs:choice>
+				<xs:element name="ExtendToDevice" type="sr:EUI"/>
+				<xs:element name="DeviceIncrement" type="xs:integer"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RequestWANMatrix">
+		<xs:choice>
+			<xs:element name="UPRN" type="sr:UPRN"/>
+			<xs:element name="PartialAddress" type="sr:PartialAddress"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="DevicePrenotification">
+		<xs:sequence>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:element name="DeviceManufacturer" type="sr:DeviceManufacturer"/>
+			<xs:element name="DeviceModel" type="sr:DeviceModel"/>
+			<xs:element name="DeviceType" type="sr:DeviceType"/>
+			<xs:element name="SMETSCHTSVersion" type="sr:SMETSCHTSVersion" minOccurs="0"/>
+			<xs:element name="FirmwareVersion" type="sr:FirmwareVersion" minOccurs="0"/>
+			<xs:element name="ESMEVariant" type="sr:ESMEVariant" minOccurs="0"/>
+			<xs:element name="AssociatedGPFDeviceID" type="sr:EUI" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="DeviceManufacturer">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DeviceModel">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SMETSCHTSVersion">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ESMEVariant">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+			<xs:enumeration value="C"/>
+			<xs:enumeration value="AD"/>
+			<xs:enumeration value="BD"/>
+			<xs:enumeration value="CD"/>
+			<xs:enumeration value="ADE"/>
+			<xs:enumeration value="BDE"/>
+			<xs:enumeration value="CDE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RecordNetworkDataGAS"/>
+	<xs:complexType name="SignedPreCommand">
+		<xs:complexContent>
+			<xs:extension base="sr:FutureDatedAbstractType">
+				<xs:sequence>
+					<xs:element name="GBCSPayload" type="xs:base64Binary"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="UPRN">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:totalDigits value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PostCode">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="6"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AddressIdentifier">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="PropertyFilter">
+		<xs:sequence>
+			<xs:element name="PostCode" type="sr:PostCode"/>
+			<xs:element name="AddressIdentifier" type="sr:AddressIdentifier"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReadInventory">
+		<xs:choice>
+			<xs:element name="UPRN" type="sr:UPRN"/>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:element name="MPxN" type="sr:ImportMPxN"/>
+			<xs:element name="PropertyFilter" type="sr:PropertyFilter"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="Request">
+		<xs:sequence>
+			<xs:element name="Header">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RequestID" type="sr:DccaCoreRequestIDType"/>
+						<xs:element name="CommandVariant" type="sr:CommandVariant"/>
+						<xs:element name="ServiceReferenceVariant" type="sr:ServiceReferenceVariant"/>
+						<xs:element name="Sequencing" type="sr:Sequencing" minOccurs="0"/>
+						<xs:element name="KeyInfo" type="sr:KeyInfo" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Body">
+				<xs:complexType>
+					<xs:choice>
+						<!-- Service Ref 1.x -->
+						<xs:element name="UpdateImportTariffPrimaryElement" type="sr:TariffPrimaryElement"/>
+						<xs:element name="UpdateImportTariffSecondaryElement" type="sr:TariffSecondaryElement"/>
+						<xs:element name="UpdatePricePrimaryElement" type="sr:UpdatePricePrimaryElement"/>
+						<xs:element name="UpdatePriceSecondaryElement" type="sr:UpdatePriceSecondaryElement"/>
+						<xs:element name="UpdateMeterBalance" type="sr:UpdateMeterBalance"/>
+						<xs:element name="UpdatePaymentMode" type="sr:UpdatePaymentMode"/>
+						<xs:element name="ResetTariffBlockCounterMatrix" type="sr:ResetTariffBlockCounterMatrix"/>
+						<!-- Service Ref 2.x -->
+						<xs:element name="UpdatePrepayConfiguration" type="sr:UpdatePrepayConfiguration"/>
+						<xs:element name="TopUpDevice" type="sr:TopUpDevice"/>
+						<xs:element name="TopUpDeviceDCCA" type="sr:TopUpDeviceDCCA"/>
+						<xs:element name="UpdateDebt" type="sr:UpdateDebt"/>
+						<xs:element name="ActivateEmergencyCredit" type="sr:ActivateEmergencyCredit"/>
+						<!-- Service Ref 3.x -->
+						<xs:element name="DisplayMessage" type="sr:DisplayMessage"/>
+						<xs:element name="RestrictAccessForChangeOfTenancy" type="sr:RestrictAccessForChangeOfTenancy"/>
+						<xs:element name="ClearEventLog" type="sr:ClearEventLog"/>
+						<xs:element name="UpdateSupplierName" type="sr:UpdateSupplierName"/>
+						<xs:element name="DisablePrivacyPIN" type="sr:DisablePrivacyPIN"/>
+						<!-- Service Ref 4.x -->
+						<xs:element name="ReadInstantaneousImportRegisters" type="sr:ReadInstantaneousImportRegisters"/>
+						<xs:element name="ReadInstantaneousImportTOUMatrices" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<xs:element name="ReadInstantaneousImportTOUWithBlocksMatrices" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<xs:element name="ReadInstantaneousImportBlockCounters" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<xs:element name="ReadInstantaneousExportRegisters" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<xs:element name="ReadInstantaneousPrepayValues" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<xs:element name="RetrieveCoMOrTariffTriggeredBillingDataLog" type="sr:ReadLogFutureDatableAndURPFlag"/>
+						<xs:element name="RetrieveBillingCalendarTriggeredBillingDataLog" type="sr:ReadLogFutureDatableAndURPFlag"/>
+						<xs:element name="RetrieveBillingDataLogDebtPayments" type="sr:ReadLogFutureDatable"/>
+						<xs:element name="RetrieveBillingDataLogPrepaymentCredits" type="sr:ReadLogFutureDatable"/>
+						<xs:element name="RetrieveImportDailyReadLog" type="sr:ReadLogFutureDatableAndURPFlag"/>
+						<xs:element name="RetrieveExportDailyReadLog" type="sr:ReadLogFutureDatable"/>
+						<xs:element name="ReadActiveImportProfileData" type="sr:ReadLogFutureDatableAndURPFlag"/>
+						<xs:element name="ReadReactiveImportProfileData" type="sr:ReadLogFutureDatable"/>
+						<xs:element name="ReadExportProfileData" type="sr:ReadLogFutureDatable"/>
+						<xs:element name="ReadNetworkData" type="sr:ReadLogFutureDatableAndURPFlag"/>
+						<xs:element name="ReadTariffPrimaryElement" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ReadTariffSecondaryElement" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ReadMaximumDemandImportRegisters" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<xs:element name="ReadMaximumDemandExportRegisters" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<xs:element name="ReadPrepaymentConfiguration" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<xs:element name="ReadPrepaymentDailyReadLog" type="sr:ReadLogFutureDatableAndURPFlag"/>
+						<xs:element name="ReadLoadLimitData" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<xs:element name="ReadActivePowerImport" type="sr:ReadDataOnDemand"/>
+						<xs:element name="RetrieveDailyConsumptionLog" type="sr:ReadLogFutureDatableAndURPFlag"/>
+						<xs:element name="ReadMeterBalance" type="sr:ReadDataOnDemandOrFutureDated"/>
+						<!-- Service Ref 5.x -->
+						<xs:element name="CreateSchedule" type="sr:DSPSchedule"/>
+						<xs:element name="ReadSchedule" type="sr:ReadSchedule"/>
+						<xs:element name="DeleteSchedule" type="sr:DeleteSchedule"/>
+						<!-- Service Ref 6.x -->
+						<xs:element name="ReadDeviceConfigurationVoltage" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ReadDeviceConfigurationRandomisation" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ReadDeviceConfigurationBillingCalendar" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ReadDeviceConfigurationIdentityExcMPxN" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ReadDeviceConfigurationInstantaneousPowerThresholds" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ReadDeviceConfigurationMPxN" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ReadDeviceConfigurationGas" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ReadDeviceConfigurationPaymentMode" type="sr:ReadDataOnDemand"/>
+						<xs:element name="UpdateDeviceConfigurationLoadLimitingGeneralSettings" type="sr:UpdateDeviceConfigurationLoadLimitingGeneralSettings"/>
+						<xs:element name="UpdateDeviceConfigurationLoadLimitingCounterReset" type="sr:UpdateDeviceConfigurationLoadLimitingCounterReset"/>
+						<xs:element name="UpdateDeviceConfigurationVoltage" type="sr:UpdateDeviceConfigurationVoltage"/>
+						<xs:element name="UpdateDeviceConfigurationGasConversion" type="sr:UpdateDeviceConfigurationGasConversion"/>
+						<xs:element name="UpdateDeviceConfigurationGasFlow" type="sr:UpdateDeviceConfigurationGasFlow"/>
+						<xs:element name="UpdateDeviceConfigurationBillingCalendar" type="sr:BillingCalendar"/>
+						<xs:element name="SynchroniseClock" type="sr:SynchroniseClock"/>
+						<xs:element name="UpdateDeviceConfigurationInstantaneousPowerThreshold" type="sr:UpdateDeviceConfigurationInstantaneousPowerThreshold"/>
+						<xs:element name="ReadEventOrSecurityLog" type="sr:ReadEventOrSecurityLog"/>
+						<xs:element name="UpdateDeviceConfigurationALCDescriptions" type="sr:UpdateDeviceConfigurationALCDescriptions"/>
+						<xs:element name="UpdateDeviceConfigurationALCScheduler" type="sr:UpdateDeviceConfigurationALCScheduler"/>
+						<xs:element name="UpdateSecurityCredentialsKRP" type="sr:UpdateSecurityCredentialsKRP"/>
+						<xs:element name="UpdateSecurityCredentialsDevice" type="sr:UpdateSecurityCredentialsDevice"/>
+						<xs:element name="IssueSecurityCredentials" type="sr:IssueSecurityCredentials"/>
+						<xs:element name="SetMaximumDemandConfigurableTimePeriod" type="sr:SetMaximumDemandConfigurableTimePeriod"/>
+						<xs:element name="ResetMaximumDemandRegisters" type="sr:ResetMaximumDemandRegisters"/>
+						<xs:element name="SetDeviceConfigurationImportMPxN" type="sr:SetDeviceConfigurationImportMPxN"/>
+						<xs:element name="SetDeviceConfigurationExportMPAN" type="sr:SetDeviceConfiguratinExportMPAN"/>
+						<xs:element name="RequestHandoverOfDCCControlledDevice" type="sr:RequestHandoverOfDCCControlledDevice"/>
+						<xs:element name="ConfigureAlertBehaviour" type="sr:ConfigureAlertBehaviour"/>
+						<xs:element name="UpdateSecurityCredentialsCoS" type="sr:UpdateSecurityCredentialsCoS"/>
+						<xs:element name="RetrieveDeviceSecurityCredentialsKRP" type="sr:RetrieveDeviceSecurityCredentialsKRP"/>
+						<xs:element name="RetrieveDeviceSecurityCredentialsDevice" type="sr:RetrieveDeviceSecurityCredentialsDevice"/>
+						<xs:element name="SetElectricitySupplyTamperState" type="sr:SetElectricitySupplyTamperState"/>
+						<!-- Service Ref 7.x -->
+						<xs:element name="EnableSupply" type="sr:EnableSupply"/>
+						<xs:element name="DisableSupply" type="sr:DisableSupply"/>
+						<xs:element name="ArmSupply" type="sr:ArmSupply"/>
+						<xs:element name="ReadSupplyStatus" type="sr:ReadDataOnDemand"/>
+						<xs:element name="ActivateAuxiliaryLoad" type="sr:ActivateAuxiliaryLoad"/>
+						<xs:element name="DeactivateAuxiliaryLoad" type="sr:DeactivateAuxiliaryLoad"/>
+						<xs:element name="ReadALCSData" type="sr:ReadALCSData"/>
+						<xs:element name="ResetAuxiliaryLoad" type="sr:ResetAuxiliaryLoad"/>
+						<xs:element name="AddAuxiliaryLoadToBoostButton" type="sr:AddAuxiliaryLoadToBoostButton"/>
+						<xs:element name="RemoveAuxiliaryLoadFromBoostButton" type="sr:RemoveAuxiliaryLoadFromBoostButton"/>
+						<xs:element name="ReadBoostButtonDetails" type="sr:ReadLogFutureDatable"/>
+						<xs:element name="SetRandomisedOffsetLimit" type="sr:SetRandomisedOffsetLimit"/>
+						<!-- Service Ref 8.x -->
+						<xs:element name="CommissionDeviceSynchroniseClock" type="sr:SynchroniseClock"/>
+						<xs:element name="ReadInventory" type="sr:ReadInventory"/>
+						<xs:element name="DecommissionDevice" type="sr:DecommissionDevice"/>
+						<xs:element name="UpdateInventory" type="sr:UpdateInventory"/>
+						<xs:element name="ServiceOptOut" type="sr:ServiceOptOut"/>
+						<xs:element name="ServiceOptIn" type="sr:ServiceOptIn"/>
+						<xs:element name="JoinServiceCritical" type="sr:JoinOrUnjoinDevice"/>
+						<xs:element name="JoinServiceNonCritical" type="sr:JoinOrUnjoinDevice"/>
+						<xs:element name="UnjoinServiceCritical" type="sr:JoinOrUnjoinDevice"/>
+						<xs:element name="UnjoinServiceNonCritical" type="sr:JoinOrUnjoinDevice"/>
+						<xs:element name="ReadDeviceLog" type="sr:ReadDeviceLog"/>
+						<xs:element name="UpdateHANDeviceLog" type="sr:UpdateHANDeviceLog"/>
+						<xs:element name="RestoreHANDeviceLog" type="sr:RestoreHANDeviceLog"/>
+						<xs:element name="RestoreGPFDeviceLog" type="sr:RestoreGPFDeviceLog"/>
+						<xs:element name="ReturnLocalCommandResponse" type="sr:ReturnLocalCommandResponse"/>
+						<xs:element name="CHFInstallSuccessSMWAN" type="sr:CHFInstallSuccessSMWAN"/>
+						<xs:element name="CHFInstallSuccessNoSMWAN" type="sr:CHFInstallSuccessNoSMWAN"/>
+						<xs:element name="CHFFaultReturn" type="sr:CHFFaultReturn"/>
+						<xs:element name="CHFNoFaultReturn" type="sr:CHFNoFaultReturn"/>
+						<!-- Service Ref 9.x -->
+						<xs:element name="RequestCustomerIdentificationNumber" type="sr:RequestCustomerIdentificationNumber"/>
+						<!-- Service Ref 11.x -->
+						<xs:element name="UpdateFirmware" type="sr:UpdateFirmware"/>
+						<xs:element name="UpdateFirmwareDCCA" type="sr:UpdateFirmwareDCCA"/>
+						<xs:element name="ReadFirmwareVersion" type="sr:ReadFirmwareVersion"/>
+						<xs:element name="ActivateFirmware" type="sr:ActivateFirmware"/>
+						<!-- Service Ref 12.x -->
+						<xs:element name="ActivateFirmwareDCCA" type="sr:ActivateFirmwareDCCA"/>
+						<xs:element name="RequestWANMatrix" type="sr:RequestWANMatrix"/>
+						<xs:element name="DevicePrenotification" type="sr:DevicePrenotification"/>
+						<!-- Service Ref 14.x -->
+						<xs:element name="RecordNetworkDataGAS" type="sr:RecordNetworkDataGAS"/>
+						<!-- Signed Ref D.x.x - DCC Adapter-provideded Service Requests -->
+						<!-- D.1.1 -->
+						<xs:element name="UpdateDeviceCredentialsOrchestrationDCCA" type="sr:UpdateDeviceCredentialsOrchestrationDCCA"/>
+						<!-- D.1.2 -->
+						<xs:element name="DeviceCertificateSigningDCCA" type="sr:DeviceCertificateSigningDCCA"/>
+						<!-- D.1.3-->
+						<xs:element name="DeviceCertificateSigningBatchDCCA" type="sr:DeviceCertificateSigningBatchDCCA"/>
+						<!-- as per SMKI IDS for submit batch -->
+						<!-- D.1.4 -->
+						<xs:element name="DeviceCertificateSigningBatchResultDCCA" type="sr:DeviceCertificateSigningBatchResultDCCA"/>
+						<!-- as per SMKI IDS for batch result PLUS the BatchID -->
+						<!-- D.2.1 -->
+						<xs:element name="ParseLocalCommandResponseDCCA" type="sr:ParseLocalCommandResponseDCCA"/>
+						<!-- D.3.1 -->
+						<xs:element name="PingDCCA" type="sr:PingDCCA"/>
+						<!-- D.4.1 -->
+						<xs:element name="GetUTRNDCCA" type="sr:GetUTRNDCCA"/>
+						<!-- D.5.1 -->
+						<xs:element name="GetTopLevelActiveViewDCCA"/>
+						<!-- D.5.2 -->
+						<xs:element name="GetCurrentKeyChunkDCCA" type="sr:GetCurrentKeyChunkDCCA"/>
+						<!-- D.5.3 -->
+						<xs:element name="GetCertificateSetDCCA" type="sr:GetCertificateSetDCCA"/>
+						<!-- D.5.4 -->
+						<xs:element name="GetCurrentKeyChunksDCCA" type="sr:GetCurrentKeyChunksDCCA"/>
+						<!-- D.5.5 -->
+						<xs:element name="ActivateExtendKeyChunkDCCA" type="sr:ActivateExtendKeyChunkDCCA"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="schemaVersion" type="xs:decimal" use="required" fixed="1.0"/>
+		<xs:attribute name="AuthorisedSystem" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="20"/>
+					<xs:whiteSpace value="collapse"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="AuditTag" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="16"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="Request" type="sr:Request"/>
+	<!--    Responses -->
+	<xs:complexType name="DSPSchedule">
+		<xs:sequence>
+			<xs:element name="ScheduleFrequency" type="sr:ScheduleFrequency"/>
+			<xs:element name="ScheduleStartDate" type="xs:date"/>
+			<xs:element name="ScheduleEndDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="ScheduleExecutionStartTime" type="xs:time" minOccurs="0"/>
+			<xs:element name="SendAsURP" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="DSPScheduledServiceReference" type="sr:DSPScheduledServiceReference"/>
+			<xs:element name="DSPScheduledServiceReferenceVariant" type="sr:DSPScheduledServiceReferenceVariant"/>
+			<xs:element name="DeviceID" type="sr:EUI"/>
+			<xs:choice>
+				<xs:element name="DSPRetrieveImportDailyReadLog" type="sr:ReadLogPeriodOffset"/>
+				<xs:element name="DSPRetrieveExportDailyReadLog" type="sr:ReadLogPeriodOffset"/>
+				<xs:element name="DSPReadActiveImportProfileData" type="sr:ReadLogPeriodOffset"/>
+				<xs:element name="DSPReadReactiveImportProfileData" type="sr:ReadLogPeriodOffset"/>
+				<xs:element name="DSPReadExportProfileData" type="sr:ReadLogPeriodOffset"/>
+				<xs:element name="DSPReadNetworkData" type="sr:ReadLogPeriodOffset"/>
+				<xs:element name="DSPReadMaximumDemandImportRegisters" type="sr:DSPReadData"/>
+				<xs:element name="DSPReadMaximumDemandExportRegisters" type="sr:DSPReadData"/>
+				<xs:element name="DSPReadPrepaymentDailyReadLog" type="sr:ReadLogPeriodOffset"/>
+				<xs:element name="DSPReadLoadLimitData" type="sr:DSPReadData"/>
+				<xs:element name="DSPReadActivePowerImport" type="sr:DSPReadData"/>
+				<xs:element name="DSPRetrieveDailyConsumptionLog" type="sr:ReadLogPeriodOffset"/>
+				<xs:element name="DSPRecordNetworkDataGAS" type="sr:RecordNetworkDataGAS"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="MPxN">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="13"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImportMPxN">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="13"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MPAN">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="13"/>
+			<xs:maxLength value="13"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MPRN">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="MeterMPxNs">
+		<xs:sequence>
+			<xs:element name="ImportMPxN" type="sr:ImportMPxN"/>
+			<xs:element name="SecondaryImportMPAN" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="sr:MPAN">
+						<xs:minLength value="13"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ExportMPAN" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="sr:MPAN">
+						<xs:minLength value="13"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

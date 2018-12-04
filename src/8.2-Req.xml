@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request xmlns="http://www.cgi.com/DccAdapter/core/ServiceRequest" schemaVersion="1.0" AuthorisedSystem="TEST_HARNESS_SYSTEM" AuditTag="8.2-005">
+  <Header>
+    <RequestID>
+      <OriginatorEui>AA-BB-CC-DD-EE-FF-00-24</OriginatorEui>
+      <TargetEui>AB-BB-CB-DB-EB-FB-01-11</TargetEui>
+      <OriginatorCounter>4336</OriginatorCounter>
+    </RequestID>
+    <CommandVariant>1</CommandVariant>
+    <ServiceReferenceVariant>8.2</ServiceReferenceVariant>
+  </Header>
+  <Body>
+    <ReadInventory>
+      <PropertyFilter>
+        <PostCode>12345678</PostCode>
+        <AddressIdentifier>123456789012345678901234567890</AddressIdentifier>
+      </PropertyFilter>
+    </ReadInventory>
+  </Body>
+</Request>
