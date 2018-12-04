@@ -1,0 +1,5 @@
+<ResponseMessage>
+   <ServiceReference>11.1</ServiceReference>
+   <ServiceReferenceVariant>11.1</ServiceReferenceVariant>
+ 
+</ResponseMessage>

@@ -1,0 +1,18 @@
+<UpdateDeviceCredentialsOrchestrationDCCA MessageSuccess="true">
+   <IssueSecurityCredentials>
+      <Header>
+  <RequestID>70-B3-D5-1F-30-19-FF-FF:AB-5D-99-BB-CC-10-05-16:1889</RequestID> 
+  <ResponseID>AB-5D-99-BB-CC-10-05-16:70-B3-D5-1F-30-19-FF-FF:1889</ResponseID> 
+  <ResponseCode>I0</ResponseCode> 
+  <ResponseDateTime>2016-05-10T09:27:01</ResponseDateTime> 
+  </Header>
+
+      <Body>
+         <Response>
+            <SMETSData>
+               <IssueSecurityCredentialsRsp MessageSuccess="true" />
+            </SMETSData>
+         </Response>
+      </Body>
+   </IssueSecurityCredentials>
+</UpdateDeviceCredentialsOrchestrationDCCA>

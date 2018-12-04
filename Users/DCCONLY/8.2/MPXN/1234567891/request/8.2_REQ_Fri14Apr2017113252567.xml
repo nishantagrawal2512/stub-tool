@@ -1,0 +1,16 @@
+<ser:Request schemaVersion="1.0" AuthorisedSystem="CGISystemSBX" xmlns:ser="http://www.cgi.com/DccAdapter/core/ServiceRequest">
+   <ser:Header>
+      <ser:RequestID>
+         <ser:OriginatorEui>70-B3-D5-1F-30-19-FF-FF</ser:OriginatorEui>
+         <ser:TargetEui>D0-D1-D2-D3-D4-D5-D6-D7</ser:TargetEui>
+         <ser:OriginatorCounter>48</ser:OriginatorCounter>
+      </ser:RequestID>
+      <ser:CommandVariant>1</ser:CommandVariant>
+      <ser:ServiceReferenceVariant>8.2</ser:ServiceReferenceVariant>
+   </ser:Header>
+   <ser:Body>
+      <ser:ReadInventory>
+         <ser:MPxN>1234567891</ser:MPxN>
+      </ser:ReadInventory>
+   </ser:Body>
+</ser:Request>

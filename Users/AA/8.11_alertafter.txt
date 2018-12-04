@@ -1,0 +1,15 @@
+<DCCAlertMessage>
+         <DCCAlertCode>N1</DCCAlertCode>
+         <DCCAlert>
+            <DeviceStatusChangeEvent>
+               <DeviceID>AD-BC-17-04-10-12-33-06</DeviceID>
+               <DeviceStatusChange>
+                  <MeterDecommissioningOrWithdrawal>
+                     <MeterDecommissionOrWithdrawal>
+                        <ImportMPxN>1234567890</ImportMPxN>
+                     </MeterDecommissionOrWithdrawal>
+                  </MeterDecommissioningOrWithdrawal>
+               </DeviceStatusChange>
+            </DeviceStatusChangeEvent>
+         </DCCAlert>
+      </DCCAlertMessage>

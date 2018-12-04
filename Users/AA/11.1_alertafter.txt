@@ -1,0 +1,10 @@
+<DeviceAlertContent>
+	<GBCSHexAlertCode>8F72</GBCSHexAlertCode>
+	<AlertDescription>Firmware verification Success</AlertDescription>
+	<Timestamp>2017-01-02T05:52:00</Timestamp>
+	<Payload>
+		<FirmwareVerificationDeviceAlert>
+			<ManufacturerImageHash>This was from AA user</ManufacturerImageHash>
+		</FirmwareVerificationDeviceAlert>
+	</Payload>
+</DeviceAlertContent>

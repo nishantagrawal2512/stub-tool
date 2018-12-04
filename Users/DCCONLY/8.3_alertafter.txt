@@ -1,0 +1,12 @@
+<DCCAlert>
+	<DeviceStatusChangeEvent>
+		<DeviceID>AE-BA-17-04-14-11-06-02</DeviceID>
+		<DeviceStatusChange>
+			<MeterDecommissioningOrWithdrawal>
+				<MeterDecommissionOrWithdrawal>
+					<ImportMPxN>1411704141141</ImportMPxN>
+				</MeterDecommissionOrWithdrawal>
+			</MeterDecommissioningOrWithdrawal>
+		</DeviceStatusChange>
+	</DeviceStatusChangeEvent>
+</DCCAlert>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Response xmlns="http://www.cgi.com/DccAdapter/core/ServiceResponse" xmlns:ra="http://www.dccinterface.co.uk/ResponseAndAlert" xmlns:sr="http://www.dccinterface.co.uk/ServiceUserGateway" schemaVersion="1.0">
+	<Header>
+		<ResponseID>AA-02-01-00-00-00-00-01:70-B3-D5-1F-30-19-FF-FF:106</ResponseID>
+		<ResponseCode>I0</ResponseCode>
+		<ResponseDateTime>2017-04-24T18:36:48</ResponseDateTime>
+	</Header>
+	<Body>
+		<DeviceAlertMessage>
+			<AlertCode>AAAA</AlertCode>
+			<GBCSPayload>
+				<GBCSRawData/>
+				<GBCSResponse>
+					<Header>
+						<BusinessOriginatorID>AA-02-01-00-00-00-00-01</BusinessOriginatorID>
+						<BusinessTargetID>70-B3-D5-1F-30-19-FF-FF</BusinessTargetID>
+						<OriginatorCounter>106</OriginatorCounter>
+						<GBCSHexadecimalMessageCode>1001</GBCSHexadecimalMessageCode>
+					</Header>
+					<Body>
+						<DeviceAlertMessage>
+							<DeviceAlertContent>
+								<GBCSHexAlertCode>8F72</GBCSHexAlertCode>
+								<AlertDescription>Firmware verification Success</AlertDescription>
+								<Timestamp>2017-01-02T05:52:00</Timestamp>
+								<Payload>
+									<FirmwareVerificationDeviceAlert>
+										<ManufacturerImageHash>This was from AA user</ManufacturerImageHash>
+									</FirmwareVerificationDeviceAlert>
+								</Payload>
+							</DeviceAlertContent>
+						</DeviceAlertMessage>
+					</Body>
+				</GBCSResponse>
+			</GBCSPayload>
+		</DeviceAlertMessage>
+	</Body>
+</Response>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Response xmlns="http://www.cgi.com/DccAdapter/core/ServiceResponse" xmlns:ra="http://www.dccinterface.co.uk/ResponseAndAlert" xmlns:sr="http://www.dccinterface.co.uk/ServiceUserGateway" schemaVersion="1.0">
+	<Header>
+		<ResponseID>FF-02-01-00-00-00-00-01:70-B3-D5-1F-30-19-FF-FF:106</ResponseID>
+		<ResponseCode>I0</ResponseCode>
+		<ResponseDateTime>2017-04-14T11:36:29</ResponseDateTime>
+	</Header>
+	<Body>
+		<DCCAlertMessage>
+			<DCCAlertCode>alertafter11.1</DCCAlertCode>
+			<test> 11.1_AlertAFter user code </test>
+		</DCCAlertMessage>
+	</Body>
+</Response>
